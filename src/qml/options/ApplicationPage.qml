@@ -101,7 +101,7 @@ Page {
                             }
                             textRole: "text"
                             valueRole: "value"
-                            currentValue: MementoSettings.applicationLanguage
+                            Component.onCompleted: currentIndex = indexOfValue(MementoSettings.applicationLanguage)
                             onActivated: MementoSettings.applicationLanguage = currentValue
                         }
                     }

@@ -10,14 +10,26 @@ SettingsBox {
     property int radius: 10
 
     property alias decks: deckComboBox.model
-    property alias currentDeck: deckComboBox.currentValue
+    property string currentDeck
     property alias currentDeckIndex: deckComboBox.currentIndex
     signal deckActivated(int index)
 
     property alias models: modelComboBox.model
-    property alias currentModel: modelComboBox.currentValue
+    property string currentModel
     property alias currentModelIndex: modelComboBox.currentIndex
     signal modelActivated(int index)
+
+    // ComboBox.currentValue is read-only, so the desired selection is held in
+    // currentDeck/currentModel and pushed into the combos here — re-resolved
+    // when the async deck/model lists arrive.
+    function syncDeck() {
+        deckComboBox.currentIndex = deckComboBox.indexOfValue(root.currentDeck);
+    }
+    function syncModel() {
+        modelComboBox.currentIndex = modelComboBox.indexOfValue(root.currentModel);
+    }
+    onCurrentDeckChanged: syncDeck()
+    onCurrentModelChanged: syncModel()
 
     property alias fields: fieldListView.model
 
@@ -38,6 +50,7 @@ SettingsBox {
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredWidth: 250
                 onActivated: (index) => root.deckActivated(index)
+                onModelChanged: root.syncDeck()
             }
         }
 
@@ -56,6 +69,7 @@ SettingsBox {
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredWidth: 250
                 onActivated: (index) => root.modelActivated(index)
+                onModelChanged: root.syncModel()
             }
         }
 

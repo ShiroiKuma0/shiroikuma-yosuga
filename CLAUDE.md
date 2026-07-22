@@ -31,6 +31,7 @@ Before any work, read **`.claude/skills/build-fork/SKILL.md`** (canonical build)
 | Branding / links | our name + `https://github.com/ShiroiKuma0/shiroikuma-yosuga` everywhere upstream's name/links appear (README, Help/About, update checks) | rebrand commits on `custom` |
 | Keystore | `~/.android-keystores/shiroikuma-yosuga.jks`, alias `yosuga` (recorded in the 暗号 org file; NOT used by the deb pipeline — reserved for release signing / any future Android build) | — |
 | Artifact | `~/tmp/shiroikuma-yosuga_<ver>_amd64.deb` | `_scripts/build-fork.sh` |
+| Qt 6.9.2 QML load fix | upstream binds the read-only `ComboBox.currentValue` (8 option pages) and aliases it (`AnkiNoteBox.qml`) — the 6.9.2 engine refuses to load; replaced with `currentIndex = indexOfValue(...)` sync (`Component.onCompleted` / property-change + `onModelChanged` handlers). Check on every rebase whether upstream fixed it their own way — if so, drop ours. | `src/qml/options/*.qml`, `src/qml/controls/AnkiNoteBox.qml` |
 
 ### Build commands
 ```bash

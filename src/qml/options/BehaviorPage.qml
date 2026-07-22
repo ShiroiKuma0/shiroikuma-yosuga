@@ -315,7 +315,7 @@ Page {
                             }
                             textRole: "text"
                             valueRole: "value"
-                            currentValue: MementoSettings.behaviorFileOpenDirectory
+                            Component.onCompleted: currentIndex = indexOfValue(MementoSettings.behaviorFileOpenDirectory)
                             onActivated: MementoSettings.behaviorFileOpenDirectory = currentValue
                         }
                     }

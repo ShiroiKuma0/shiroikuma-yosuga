@@ -43,6 +43,11 @@ if command -v dpkg-shlibdeps >/dev/null 2>&1; then
 fi
 [[ -n "$DEPS" ]] || DEPS="libqt6widgets6 (>= 6.9), libqt6svg6, libqt6qml6, libmpv2, libjson-c5, libzip4t64, libsqlite3-0"
 
+# QML runtime modules are loaded as plugins — invisible to dpkg-shlibdeps.
+# Keep in sync with the `import Qt*` set under src/qml/ and src/quick/.
+QML_DEPS="qml6-module-qtcore, qml6-module-qtqml, qml6-module-qtqml-models, qml6-module-qtquick, qml6-module-qtquick-controls, qml6-module-qtquick-dialogs, qml6-module-qtquick-layouts, qml6-module-qtquick-shapes, qml6-module-qtquick-window, qml6-module-qtquick-templates"
+DEPS="$DEPS, $QML_DEPS"
+
 # 4. Control file + package
 mkdir -p "$STAGE/DEBIAN"
 INSTALLED_SIZE=$(du -sk "$STAGE" --exclude=DEBIAN | cut -f1)

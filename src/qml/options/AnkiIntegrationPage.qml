@@ -475,7 +475,7 @@ Page {
                             }
                             textRole: "text"
                             valueRole: "value"
-                            currentValue: AnkiConfig.profile.duplicatePolicy
+                            Component.onCompleted: currentIndex = indexOfValue(AnkiConfig.profile.duplicatePolicy)
                             onActivated: AnkiConfig.profile.duplicatePolicy = currentValue
                         }
                     }
@@ -527,7 +527,7 @@ Page {
                             }
                             textRole: "text"
                             valueRole: "value"
-                            currentValue: AnkiConfig.profile.screenshotType
+                            Component.onCompleted: currentIndex = indexOfValue(AnkiConfig.profile.screenshotType)
                             onActivated: AnkiConfig.profile.screenshotType = currentValue
                         }
                     }
