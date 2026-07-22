@@ -8,5 +8,5 @@ MetaLabel {
 
     text: root.info?.name ?? ""
     tip: ""
-    color: "#aa66cc"
+    color: MementoSettings.interfaceSearchTagDictionaryColor
 }

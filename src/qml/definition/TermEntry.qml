@@ -193,6 +193,9 @@ Item {
                     font.hintingPreference: MementoSettings.interfaceSearchReadingFont.hintingPreference
                     font.styleName: MementoSettings.interfaceSearchReadingFont.styleName
 
+                    color: MementoSettings.interfaceSearchReadingColor.a > 0 ?
+                               MementoSettings.interfaceSearchReadingColor :
+                               MementoPalette.text
                     text: root.term?.reading ?? ""
                 }
 
@@ -214,6 +217,9 @@ Item {
                     font.hintingPreference: MementoSettings.interfaceSearchExpressionFont.hintingPreference
                     font.styleName: MementoSettings.interfaceSearchExpressionFont.styleName
 
+                    color: MementoSettings.interfaceSearchExpressionColor.a > 0 ?
+                               MementoSettings.interfaceSearchExpressionColor :
+                               MementoPalette.text
                     expression: root.term?.expression ?? ""
                     onKanjiClicked: (expression, index) => root.kanjiClicked(expression, index)
                 }
@@ -433,6 +439,9 @@ Item {
                     font.hintingPreference: MementoSettings.interfaceSearchConjFont.hintingPreference
                     font.styleName: MementoSettings.interfaceSearchConjFont.styleName
 
+                    color: MementoSettings.interfaceSearchConjColor.a > 0 ?
+                               MementoSettings.interfaceSearchConjColor :
+                               MementoPalette.text
                     text: root.term?.conjugationExplanation ?? ""
                 }
             }

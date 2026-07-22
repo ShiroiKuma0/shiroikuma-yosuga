@@ -11,47 +11,47 @@ MetaLabel {
     color: {
         if (root.tag.category === "name")
         {
-            return "#b6327a";
+            return MementoSettings.interfaceSearchTagNameColor;
         }
         else if (root.tag.category === "expression")
         {
-            return "#f0ad4e";
+            return MementoSettings.interfaceSearchTagExpressionColor;
         }
         else if (root.tag.category === "popular")
         {
-            return "#0275d8";
+            return MementoSettings.interfaceSearchTagPopularColor;
         }
         else if (root.tag.category === "frequent")
         {
-            return "#5bc0de";
+            return MementoSettings.interfaceSearchTagFrequentColor;
         }
         else if (root.tag.category === "archaism")
         {
-            return "#d9534f";
+            return MementoSettings.interfaceSearchTagArchaismColor;
         }
         else if (root.tag.category === "dictionary")
         {
-            return "#aa66cc";
+            return MementoSettings.interfaceSearchTagDictionaryColor;
         }
         else if (root.tag.category === "frequency")
         {
-            return "#5cb85c";
+            return MementoSettings.interfaceSearchTagFrequencyColor;
         }
         else if (root.tag.category === "partOfSpeech")
         {
-            return "#565656";
+            return MementoSettings.interfaceSearchTagPosColor;
         }
         else if (root.tag.category === "search")
         {
-            return "#8a8a91";
+            return MementoSettings.interfaceSearchTagSearchColor;
         }
         else if (root.tag.category === "pitch-accent-dictionary")
         {
-            return "#6640be";
+            return MementoSettings.interfaceSearchTagPitchAccentColor;
         }
         else
         {
-            return "#8a8a91";
+            return MementoSettings.interfaceSearchTagDefaultColor;
         }
     }
 }

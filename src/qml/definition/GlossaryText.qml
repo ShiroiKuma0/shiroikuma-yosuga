@@ -520,6 +520,10 @@ SearchableText {
         MementoSettings.interfaceSearchGlossaryFont.hintingPreference
     font.styleName: MementoSettings.interfaceSearchGlossaryFont.styleName
 
+    color: MementoSettings.interfaceSearchGlossaryColor.a > 0 ?
+               MementoSettings.interfaceSearchGlossaryColor :
+               MementoPalette.text
+
     text: StructuredRichText.parse(
               root.definition?.dictionaryInfo,
               root.definition?.glossary ?? [],

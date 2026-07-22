@@ -8,6 +8,15 @@ Item {
 
     required property Kanji kanji
 
+    readonly property color kanjiTextColor:
+        MementoSettings.interfaceSearchKanjiColor.a > 0 ?
+            MementoSettings.interfaceSearchKanjiColor :
+            MementoPalette.text
+    readonly property color glossaryTextColor:
+        MementoSettings.interfaceSearchGlossaryColor.a > 0 ?
+            MementoSettings.interfaceSearchGlossaryColor :
+            MementoPalette.text
+
     implicitHeight: rootLayout.implicitHeight +
                     rootLayout.anchors.topMargin +
                     rootLayout.anchors.bottomMargin
@@ -127,6 +136,7 @@ Item {
                 font.hintingPreference: MementoSettings.interfaceSearchKanjiFont.hintingPreference
                 font.styleName: MementoSettings.interfaceSearchKanjiFont.styleName
 
+                color: root.kanjiTextColor
                 text: root.kanji?.character ?? ""
             }
 
@@ -227,6 +237,7 @@ Item {
                         font.family: MementoSettings.interfaceSearchGlossaryFont.family
                         font.pointSize: MementoSettings.interfaceSearchGlossaryFont.pointSize
                         font.bold: true
+                        color: root.glossaryTextColor
                         text: qsTr("Glossary")
                     }
 
@@ -234,6 +245,7 @@ Item {
                         font.family: MementoSettings.interfaceSearchGlossaryFont.family
                         font.pointSize: MementoSettings.interfaceSearchGlossaryFont.pointSize
                         font.bold: true
+                        color: root.glossaryTextColor
                         text: qsTr("Reading")
                     }
 
@@ -241,6 +253,7 @@ Item {
                         font.family: MementoSettings.interfaceSearchGlossaryFont.family
                         font.pointSize: MementoSettings.interfaceSearchGlossaryFont.pointSize
                         font.bold: true
+                        color: root.glossaryTextColor
                         text: qsTr("Statistics")
                     }
 
@@ -257,6 +270,7 @@ Item {
                         wrapMode: TextEdit.Wrap
                         font.family: MementoSettings.interfaceSearchGlossaryFont.family
                         font.pointSize: MementoSettings.interfaceSearchGlossaryFont.pointSize
+                        color: root.glossaryTextColor
                         text: {
                             if (!defLayout.definition)
                             {
@@ -274,6 +288,7 @@ Item {
                         wrapMode: TextEdit.Wrap
                         font.family: MementoSettings.interfaceSearchGlossaryFont.family
                         font.pointSize: MementoSettings.interfaceSearchGlossaryFont.pointSize
+                        color: root.glossaryTextColor
                         text: {
                             if (!defLayout.definition)
                             {
@@ -309,6 +324,7 @@ Item {
                     font.family: MementoSettings.interfaceSearchGlossaryFont.family
                     font.pointSize: MementoSettings.interfaceSearchGlossaryFont.pointSize
                     font.bold: true
+                    color: root.glossaryTextColor
                     text: qsTr("Classifications")
                 }
 
@@ -338,6 +354,7 @@ Item {
                     font.family: MementoSettings.interfaceSearchGlossaryFont.family
                     font.pointSize: MementoSettings.interfaceSearchGlossaryFont.pointSize
                     font.bold: true
+                    color: root.glossaryTextColor
                     text: qsTr("Codepoints")
                 }
 
@@ -367,6 +384,7 @@ Item {
                     font.family: MementoSettings.interfaceSearchGlossaryFont.family
                     font.pointSize: MementoSettings.interfaceSearchGlossaryFont.pointSize
                     font.bold: true
+                    color: root.glossaryTextColor
                     text: qsTr("Dictionary Indices")
                 }
 

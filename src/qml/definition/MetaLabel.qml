@@ -52,7 +52,9 @@ Rectangle {
         font.hintingPreference: MementoSettings.interfaceSearchTagFont.hintingPreference
         font.styleName: MementoSettings.interfaceSearchTagFont.styleName
 
-        color: "white"
+        color: MementoSettings.interfaceSearchTagColor.a > 0 ?
+                   MementoSettings.interfaceSearchTagColor :
+                   "white"
         text: root.text
     }
 

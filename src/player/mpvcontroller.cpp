@@ -330,6 +330,14 @@ void MpvController::setSecondarySubtitleVisibility(bool visible)
     }
 }
 
+void MpvController::setSecondarySubtitlePos(double pos)
+{
+    if (::mpv_set_property_async(handle(), 0, "secondary-sub-pos", MPV_FORMAT_DOUBLE, &pos) < 0)
+    {
+        qWarning("Could not set secondary subtitle position to %lf", pos);
+    }
+}
+
 QVariantMap MpvController::subtitleStyle() const
 {
     auto getString = [this] (const char *name) -> QString

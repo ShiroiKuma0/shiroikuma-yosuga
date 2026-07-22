@@ -248,6 +248,15 @@ public:
     Q_INVOKABLE void setSecondarySubtitleVisibility(bool visible);
 
     /**
+     * @brief Fork: sets the vertical position mpv renders the secondary
+     * subtitle at.
+     *
+     * @param pos Percentage of window height from the top of the window,
+     * 0 to 150.
+     */
+    Q_INVOKABLE void setSecondarySubtitlePos(double pos);
+
+    /**
      * @brief Fork: reads the mpv subtitle style options used to render
      * (secondary) subtitles, so QML overlays can mimic mpv's rendering.
      *

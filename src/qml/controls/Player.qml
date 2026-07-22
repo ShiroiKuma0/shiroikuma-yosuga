@@ -104,6 +104,21 @@ MpvPlayer {
         {
             root.controller.setSubtitleVisibility(false);
         }
+        root.applySecondarySubtitleOffset();
+    }
+
+    /* Fork: keep mpv's secondary subtitle position in sync with the top
+     * offset setting. */
+    function applySecondarySubtitleOffset() {
+        root.controller.setSecondarySubtitlePos(
+            MementoSettings.interfaceSubtitleSecondaryOffset * 100);
+    }
+
+    Connections {
+        target: MementoSettings
+        function onInterfaceSubtitleSecondaryOffsetChanged() {
+            root.applySecondarySubtitleOffset();
+        }
     }
 
     Keys.onPressed: function(event) {
@@ -346,8 +361,17 @@ MpvPlayer {
         anchors {
             horizontalCenter: root.horizontalCenter
             top: root.top
-            topMargin: root.height * 0.02 +
-                       (!Features.isMacos && menu.visible ? menu.height : 0)
+
+            /* Like the primary subtitle's bottomMargin: the offset is
+             * absolute, only clamped so the menu never obscures the text —
+             * an offset that already clears the menu never moves. */
+            topMargin: {
+                let minValue =
+                    !Features.isMacos && menu.visible ? menu.height : 0;
+                let margin = root.height *
+                    MementoSettings.interfaceSubtitleSecondaryOffset;
+                return Math.max(margin, minValue);
+            }
         }
         width: Math.min(implicitWidth, root.width * 0.9)
 

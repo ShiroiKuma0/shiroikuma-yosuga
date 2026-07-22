@@ -875,6 +875,12 @@ void Settings::loadInterfaceSettings()
             Keys::Interface::Subtitle::OFFSET_DEFAULT
         ).toDouble()
     );
+    setInterfaceSubtitleSecondaryOffset(
+        s.value(
+            Keys::Interface::Subtitle::SECONDARY_OFFSET,
+            Keys::Interface::Subtitle::SECONDARY_OFFSET_DEFAULT
+        ).toDouble()
+    );
     setInterfaceSubtitleStroke(
         s.value(
             Keys::Interface::Subtitle::STROKE,
@@ -923,6 +929,12 @@ void Settings::loadInterfaceSettings()
             Keys::Interface::POPUP_HEIGHT_DEFAULT
         ).toInt()
     );
+    setInterfacePopupBackgroundColor(
+        s.value(
+            Keys::Interface::POPUP_BACKGROUND_COLOR,
+            Keys::Interface::POPUP_BACKGROUND_COLOR_DEFAULT
+        ).toString()
+    );
     setInterfaceSearchWindow(
         s.value(
             Keys::Interface::SEARCH_WINDOW,
@@ -970,6 +982,108 @@ void Settings::loadInterfaceSettings()
             Keys::Interface::SEARCH_KANJI_FONT,
             Keys::Interface::SEARCH_KANJI_FONT_DEFAULT
         )
+    );
+    setInterfaceSearchExpressionColor(
+        s.value(
+            Keys::Interface::SEARCH_EXPRESSION_COLOR,
+            Keys::Interface::SEARCH_EXPRESSION_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchReadingColor(
+        s.value(
+            Keys::Interface::SEARCH_READING_COLOR,
+            Keys::Interface::SEARCH_READING_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchConjColor(
+        s.value(
+            Keys::Interface::SEARCH_CONJ_COLOR,
+            Keys::Interface::SEARCH_CONJ_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_COLOR,
+            Keys::Interface::SEARCH_TAG_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchGlossaryColor(
+        s.value(
+            Keys::Interface::SEARCH_GLOSSARY_COLOR,
+            Keys::Interface::SEARCH_GLOSSARY_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchKanjiColor(
+        s.value(
+            Keys::Interface::SEARCH_KANJI_COLOR,
+            Keys::Interface::SEARCH_KANJI_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagNameColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_NAME_COLOR,
+            Keys::Interface::SEARCH_TAG_NAME_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagExpressionColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_EXPRESSION_COLOR,
+            Keys::Interface::SEARCH_TAG_EXPRESSION_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagPopularColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_POPULAR_COLOR,
+            Keys::Interface::SEARCH_TAG_POPULAR_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagFrequentColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_FREQUENT_COLOR,
+            Keys::Interface::SEARCH_TAG_FREQUENT_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagArchaismColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_ARCHAISM_COLOR,
+            Keys::Interface::SEARCH_TAG_ARCHAISM_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagDictionaryColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_DICTIONARY_COLOR,
+            Keys::Interface::SEARCH_TAG_DICTIONARY_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagFrequencyColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_FREQUENCY_COLOR,
+            Keys::Interface::SEARCH_TAG_FREQUENCY_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagPosColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_POS_COLOR,
+            Keys::Interface::SEARCH_TAG_POS_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagSearchColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_SEARCH_COLOR,
+            Keys::Interface::SEARCH_TAG_SEARCH_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagPitchAccentColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_PITCH_ACCENT_COLOR,
+            Keys::Interface::SEARCH_TAG_PITCH_ACCENT_COLOR_DEFAULT
+        ).toString()
+    );
+    setInterfaceSearchTagDefaultColor(
+        s.value(
+            Keys::Interface::SEARCH_TAG_DEFAULT_COLOR,
+            Keys::Interface::SEARCH_TAG_DEFAULT_COLOR_DEFAULT
+        ).toString()
     );
     setInterfaceSubtitleListWindow(
         s.value(
@@ -1057,6 +1171,10 @@ void Settings::writeInterfaceSettings()
         interfaceSubtitleOffset()
     );
     s.setValue(
+        Keys::Interface::Subtitle::SECONDARY_OFFSET,
+        interfaceSubtitleSecondaryOffset()
+    );
+    s.setValue(
         Keys::Interface::Subtitle::STROKE,
         interfaceSubtitleStroke()
     );
@@ -1085,6 +1203,10 @@ void Settings::writeInterfaceSettings()
         interfacePopupHeight()
     );
     s.setValue(
+        Keys::Interface::POPUP_BACKGROUND_COLOR,
+        interfacePopupBackgroundColor().name(QColor::HexArgb)
+    );
+    s.setValue(
         Keys::Interface::SEARCH_WINDOW,
         interfaceSearchWindow()
     );
@@ -1111,6 +1233,74 @@ void Settings::writeInterfaceSettings()
     s.setValue(
         Keys::Interface::SEARCH_KANJI_FONT,
         interfaceSearchKanjiFont().toString()
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_EXPRESSION_COLOR,
+        interfaceSearchExpressionColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_READING_COLOR,
+        interfaceSearchReadingColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_CONJ_COLOR,
+        interfaceSearchConjColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_COLOR,
+        interfaceSearchTagColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_GLOSSARY_COLOR,
+        interfaceSearchGlossaryColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_KANJI_COLOR,
+        interfaceSearchKanjiColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_NAME_COLOR,
+        interfaceSearchTagNameColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_EXPRESSION_COLOR,
+        interfaceSearchTagExpressionColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_POPULAR_COLOR,
+        interfaceSearchTagPopularColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_FREQUENT_COLOR,
+        interfaceSearchTagFrequentColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_ARCHAISM_COLOR,
+        interfaceSearchTagArchaismColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_DICTIONARY_COLOR,
+        interfaceSearchTagDictionaryColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_FREQUENCY_COLOR,
+        interfaceSearchTagFrequencyColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_POS_COLOR,
+        interfaceSearchTagPosColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_SEARCH_COLOR,
+        interfaceSearchTagSearchColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_PITCH_ACCENT_COLOR,
+        interfaceSearchTagPitchAccentColor().name(QColor::HexArgb)
+    );
+    s.setValue(
+        Keys::Interface::SEARCH_TAG_DEFAULT_COLOR,
+        interfaceSearchTagDefaultColor().name(QColor::HexArgb)
     );
     s.setValue(
         Keys::Interface::SubtitleList::WINDOW,
@@ -1159,6 +1349,7 @@ void Settings::defaultInterfaceSettings()
     setInterfaceSubtitleLineSpacing();
     setInterfaceSubtitleScale();
     setInterfaceSubtitleOffset();
+    setInterfaceSubtitleSecondaryOffset();
     setInterfaceSubtitleStroke();
     setInterfaceSubtitleColor();
     setInterfaceSubtitleBackground();
@@ -1166,6 +1357,7 @@ void Settings::defaultInterfaceSettings()
     setInterfaceSubtitleFuriganaRatio();
     setInterfacePopupWidth();
     setInterfacePopupHeight();
+    setInterfacePopupBackgroundColor();
     setInterfaceSearchWindow();
     setInterfaceSearchExpressionFont();
     setInterfaceSearchReadingFont();
@@ -1173,6 +1365,23 @@ void Settings::defaultInterfaceSettings()
     setInterfaceSearchTagFont();
     setInterfaceSearchGlossaryFont();
     setInterfaceSearchKanjiFont();
+    setInterfaceSearchExpressionColor();
+    setInterfaceSearchReadingColor();
+    setInterfaceSearchConjColor();
+    setInterfaceSearchTagColor();
+    setInterfaceSearchGlossaryColor();
+    setInterfaceSearchKanjiColor();
+    setInterfaceSearchTagNameColor();
+    setInterfaceSearchTagExpressionColor();
+    setInterfaceSearchTagPopularColor();
+    setInterfaceSearchTagFrequentColor();
+    setInterfaceSearchTagArchaismColor();
+    setInterfaceSearchTagDictionaryColor();
+    setInterfaceSearchTagFrequencyColor();
+    setInterfaceSearchTagPosColor();
+    setInterfaceSearchTagSearchColor();
+    setInterfaceSearchTagPitchAccentColor();
+    setInterfaceSearchTagDefaultColor();
     setInterfaceSubtitleListWindow();
     setInterfaceSubtitleListTimestamps();
     setInterfaceSubtitleListBackgroundColor();
@@ -2263,6 +2472,23 @@ void Settings::setInterfaceSubtitleOffset(double value)
     emit interfaceSubtitleOffsetChanged(m_interface.subtitleOffset);
 }
 
+double Settings::interfaceSubtitleSecondaryOffset() const noexcept
+{
+    return m_interface.subtitleSecondaryOffset;
+}
+
+void Settings::setInterfaceSubtitleSecondaryOffset(double value)
+{
+    if (m_interface.subtitleSecondaryOffset == value)
+    {
+        return;
+    }
+    m_interface.subtitleSecondaryOffset = value;
+    emit interfaceSubtitleSecondaryOffsetChanged(
+        m_interface.subtitleSecondaryOffset
+    );
+}
+
 double Settings::interfaceSubtitleStroke() const noexcept
 {
     return m_interface.subtitleStroke;
@@ -2370,6 +2596,23 @@ void Settings::setInterfacePopupHeight(int value)
     emit interfacePopupHeightChanged(m_interface.popupHeight);
 }
 
+QColor Settings::interfacePopupBackgroundColor() const noexcept
+{
+    return m_interface.popupBackgroundColor;
+}
+
+void Settings::setInterfacePopupBackgroundColor(const QColor &value)
+{
+    if (m_interface.popupBackgroundColor == value)
+    {
+        return;
+    }
+    m_interface.popupBackgroundColor = value;
+    emit interfacePopupBackgroundColorChanged(
+        m_interface.popupBackgroundColor
+    );
+}
+
 bool Settings::interfaceSearchWindow() const noexcept
 {
     return m_interface.searchWindow;
@@ -2473,6 +2716,281 @@ void Settings::setInterfaceSearchKanjiFont(const QFont &value)
     }
     m_interface.searchKanjiFont = value;
     emit interfaceSearchKanjiFontChanged(m_interface.searchKanjiFont);
+}
+
+QColor Settings::interfaceSearchExpressionColor() const noexcept
+{
+    return m_interface.searchExpressionColor;
+}
+
+void Settings::setInterfaceSearchExpressionColor(const QColor &value)
+{
+    if (m_interface.searchExpressionColor == value)
+    {
+        return;
+    }
+    m_interface.searchExpressionColor = value;
+    emit interfaceSearchExpressionColorChanged(
+        m_interface.searchExpressionColor
+    );
+}
+
+QColor Settings::interfaceSearchReadingColor() const noexcept
+{
+    return m_interface.searchReadingColor;
+}
+
+void Settings::setInterfaceSearchReadingColor(const QColor &value)
+{
+    if (m_interface.searchReadingColor == value)
+    {
+        return;
+    }
+    m_interface.searchReadingColor = value;
+    emit interfaceSearchReadingColorChanged(m_interface.searchReadingColor);
+}
+
+QColor Settings::interfaceSearchConjColor() const noexcept
+{
+    return m_interface.searchConjColor;
+}
+
+void Settings::setInterfaceSearchConjColor(const QColor &value)
+{
+    if (m_interface.searchConjColor == value)
+    {
+        return;
+    }
+    m_interface.searchConjColor = value;
+    emit interfaceSearchConjColorChanged(m_interface.searchConjColor);
+}
+
+QColor Settings::interfaceSearchTagColor() const noexcept
+{
+    return m_interface.searchTagColor;
+}
+
+void Settings::setInterfaceSearchTagColor(const QColor &value)
+{
+    if (m_interface.searchTagColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagColor = value;
+    emit interfaceSearchTagColorChanged(m_interface.searchTagColor);
+}
+
+QColor Settings::interfaceSearchGlossaryColor() const noexcept
+{
+    return m_interface.searchGlossaryColor;
+}
+
+void Settings::setInterfaceSearchGlossaryColor(const QColor &value)
+{
+    if (m_interface.searchGlossaryColor == value)
+    {
+        return;
+    }
+    m_interface.searchGlossaryColor = value;
+    emit interfaceSearchGlossaryColorChanged(m_interface.searchGlossaryColor);
+}
+
+QColor Settings::interfaceSearchKanjiColor() const noexcept
+{
+    return m_interface.searchKanjiColor;
+}
+
+void Settings::setInterfaceSearchKanjiColor(const QColor &value)
+{
+    if (m_interface.searchKanjiColor == value)
+    {
+        return;
+    }
+    m_interface.searchKanjiColor = value;
+    emit interfaceSearchKanjiColorChanged(m_interface.searchKanjiColor);
+}
+
+QColor Settings::interfaceSearchTagNameColor() const noexcept
+{
+    return m_interface.searchTagNameColor;
+}
+
+void Settings::setInterfaceSearchTagNameColor(const QColor &value)
+{
+    if (m_interface.searchTagNameColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagNameColor = value;
+    emit interfaceSearchTagNameColorChanged(m_interface.searchTagNameColor);
+}
+
+QColor Settings::interfaceSearchTagExpressionColor() const noexcept
+{
+    return m_interface.searchTagExpressionColor;
+}
+
+void Settings::setInterfaceSearchTagExpressionColor(const QColor &value)
+{
+    if (m_interface.searchTagExpressionColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagExpressionColor = value;
+    emit interfaceSearchTagExpressionColorChanged(
+        m_interface.searchTagExpressionColor
+    );
+}
+
+QColor Settings::interfaceSearchTagPopularColor() const noexcept
+{
+    return m_interface.searchTagPopularColor;
+}
+
+void Settings::setInterfaceSearchTagPopularColor(const QColor &value)
+{
+    if (m_interface.searchTagPopularColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagPopularColor = value;
+    emit interfaceSearchTagPopularColorChanged(
+        m_interface.searchTagPopularColor
+    );
+}
+
+QColor Settings::interfaceSearchTagFrequentColor() const noexcept
+{
+    return m_interface.searchTagFrequentColor;
+}
+
+void Settings::setInterfaceSearchTagFrequentColor(const QColor &value)
+{
+    if (m_interface.searchTagFrequentColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagFrequentColor = value;
+    emit interfaceSearchTagFrequentColorChanged(
+        m_interface.searchTagFrequentColor
+    );
+}
+
+QColor Settings::interfaceSearchTagArchaismColor() const noexcept
+{
+    return m_interface.searchTagArchaismColor;
+}
+
+void Settings::setInterfaceSearchTagArchaismColor(const QColor &value)
+{
+    if (m_interface.searchTagArchaismColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagArchaismColor = value;
+    emit interfaceSearchTagArchaismColorChanged(
+        m_interface.searchTagArchaismColor
+    );
+}
+
+QColor Settings::interfaceSearchTagDictionaryColor() const noexcept
+{
+    return m_interface.searchTagDictionaryColor;
+}
+
+void Settings::setInterfaceSearchTagDictionaryColor(const QColor &value)
+{
+    if (m_interface.searchTagDictionaryColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagDictionaryColor = value;
+    emit interfaceSearchTagDictionaryColorChanged(
+        m_interface.searchTagDictionaryColor
+    );
+}
+
+QColor Settings::interfaceSearchTagFrequencyColor() const noexcept
+{
+    return m_interface.searchTagFrequencyColor;
+}
+
+void Settings::setInterfaceSearchTagFrequencyColor(const QColor &value)
+{
+    if (m_interface.searchTagFrequencyColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagFrequencyColor = value;
+    emit interfaceSearchTagFrequencyColorChanged(
+        m_interface.searchTagFrequencyColor
+    );
+}
+
+QColor Settings::interfaceSearchTagPosColor() const noexcept
+{
+    return m_interface.searchTagPosColor;
+}
+
+void Settings::setInterfaceSearchTagPosColor(const QColor &value)
+{
+    if (m_interface.searchTagPosColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagPosColor = value;
+    emit interfaceSearchTagPosColorChanged(m_interface.searchTagPosColor);
+}
+
+QColor Settings::interfaceSearchTagSearchColor() const noexcept
+{
+    return m_interface.searchTagSearchColor;
+}
+
+void Settings::setInterfaceSearchTagSearchColor(const QColor &value)
+{
+    if (m_interface.searchTagSearchColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagSearchColor = value;
+    emit interfaceSearchTagSearchColorChanged(
+        m_interface.searchTagSearchColor
+    );
+}
+
+QColor Settings::interfaceSearchTagPitchAccentColor() const noexcept
+{
+    return m_interface.searchTagPitchAccentColor;
+}
+
+void Settings::setInterfaceSearchTagPitchAccentColor(const QColor &value)
+{
+    if (m_interface.searchTagPitchAccentColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagPitchAccentColor = value;
+    emit interfaceSearchTagPitchAccentColorChanged(
+        m_interface.searchTagPitchAccentColor
+    );
+}
+
+QColor Settings::interfaceSearchTagDefaultColor() const noexcept
+{
+    return m_interface.searchTagDefaultColor;
+}
+
+void Settings::setInterfaceSearchTagDefaultColor(const QColor &value)
+{
+    if (m_interface.searchTagDefaultColor == value)
+    {
+        return;
+    }
+    m_interface.searchTagDefaultColor = value;
+    emit interfaceSearchTagDefaultColorChanged(
+        m_interface.searchTagDefaultColor
+    );
 }
 
 bool Settings::interfaceSubtitleListWindow() const noexcept

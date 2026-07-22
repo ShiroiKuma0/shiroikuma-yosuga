@@ -8,6 +8,17 @@ Page {
 
     required property DictionarySearch search
 
+    /* Fork: user-set popup background color; alpha 0 falls back to the
+     * theme's window color. */
+    readonly property color effectiveBackground:
+        MementoSettings.interfacePopupBackgroundColor.a > 0 ?
+            MementoSettings.interfacePopupBackgroundColor :
+            MementoPalette.window
+
+    background: Rectangle {
+        color: root.effectiveBackground
+    }
+
     /* true to show the toolbar in top-level searches */
     property bool showToolbar: false
 
@@ -44,7 +55,7 @@ Page {
     function pushRootSearch() {
         stackView.push(definitionListComponent, {
             dictionarySearch: root.search,
-            canvasColor: root.palette.window
+            canvasColor: root.effectiveBackground
         }, StackView.Immediate);
     }
 
@@ -200,7 +211,7 @@ Page {
         id: definitionListComponent
 
         DefinitionList {
-            canvasColor: root.palette.window
+            canvasColor: root.effectiveBackground
             onRecursiveTermSearchRequested: function(query) {
                 root.pushTermSearch(query);
             }

@@ -278,6 +278,9 @@ namespace Keys
             constexpr const char *OFFSET = "sub-offset";
             constexpr double OFFSET_DEFAULT = 0.045;
 
+            constexpr const char *SECONDARY_OFFSET = "sub-secondary-offset";
+            constexpr double SECONDARY_OFFSET_DEFAULT = 0.02;
+
             constexpr const char *STROKE = "sub-stroke";
             constexpr double STROKE_DEFAULT = 15.0;
 
@@ -299,6 +302,11 @@ namespace Keys
 
         constexpr const char *POPUP_HEIGHT = "sub-popup-height";
         constexpr int POPUP_HEIGHT_DEFAULT = 400;
+
+        /* Fork: background color of the definition popup. Alpha 0 means
+         * "use the theme's window color". */
+        constexpr const char *POPUP_BACKGROUND_COLOR = "sub-popup-bg-color";
+        constexpr const char *POPUP_BACKGROUND_COLOR_DEFAULT = "#00000000";
 
         constexpr const char *SEARCH_WINDOW = "search-window";
         constexpr bool SEARCH_WINDOW_DEFAULT = false;
@@ -363,6 +371,62 @@ namespace Keys
                 108
 #endif // defined(Q_OS_MACOS)
         );
+
+        /* Fork: per-category text colors for the definition popup. Alpha 0
+         * means "use the theme's text color" (tags default to the white the
+         * colored chips have always used). */
+        constexpr const char *SEARCH_EXPRESSION_COLOR = "search-expression-color";
+        constexpr const char *SEARCH_EXPRESSION_COLOR_DEFAULT = "#00000000";
+
+        constexpr const char *SEARCH_READING_COLOR = "search-reading-color";
+        constexpr const char *SEARCH_READING_COLOR_DEFAULT = "#00000000";
+
+        constexpr const char *SEARCH_CONJ_COLOR = "search-conj-color";
+        constexpr const char *SEARCH_CONJ_COLOR_DEFAULT = "#00000000";
+
+        constexpr const char *SEARCH_TAG_COLOR = "search-tag-color";
+        constexpr const char *SEARCH_TAG_COLOR_DEFAULT = "#FFFFFFFF";
+
+        constexpr const char *SEARCH_GLOSSARY_COLOR = "search-glossary-color";
+        constexpr const char *SEARCH_GLOSSARY_COLOR_DEFAULT = "#00000000";
+
+        constexpr const char *SEARCH_KANJI_COLOR = "search-kanji-color";
+        constexpr const char *SEARCH_KANJI_COLOR_DEFAULT = "#00000000";
+
+        /* Fork: per-category background colors for the tag chips in the
+         * definition popup. Defaults are the colors upstream hard-coded. */
+        constexpr const char *SEARCH_TAG_NAME_COLOR = "search-tag-name-color";
+        constexpr const char *SEARCH_TAG_NAME_COLOR_DEFAULT = "#FFB6327A";
+
+        constexpr const char *SEARCH_TAG_EXPRESSION_COLOR = "search-tag-expression-color";
+        constexpr const char *SEARCH_TAG_EXPRESSION_COLOR_DEFAULT = "#FFF0AD4E";
+
+        constexpr const char *SEARCH_TAG_POPULAR_COLOR = "search-tag-popular-color";
+        constexpr const char *SEARCH_TAG_POPULAR_COLOR_DEFAULT = "#FF0275D8";
+
+        constexpr const char *SEARCH_TAG_FREQUENT_COLOR = "search-tag-frequent-color";
+        constexpr const char *SEARCH_TAG_FREQUENT_COLOR_DEFAULT = "#FF5BC0DE";
+
+        constexpr const char *SEARCH_TAG_ARCHAISM_COLOR = "search-tag-archaism-color";
+        constexpr const char *SEARCH_TAG_ARCHAISM_COLOR_DEFAULT = "#FFD9534F";
+
+        constexpr const char *SEARCH_TAG_DICTIONARY_COLOR = "search-tag-dictionary-color";
+        constexpr const char *SEARCH_TAG_DICTIONARY_COLOR_DEFAULT = "#FFAA66CC";
+
+        constexpr const char *SEARCH_TAG_FREQUENCY_COLOR = "search-tag-frequency-color";
+        constexpr const char *SEARCH_TAG_FREQUENCY_COLOR_DEFAULT = "#FF5CB85C";
+
+        constexpr const char *SEARCH_TAG_POS_COLOR = "search-tag-pos-color";
+        constexpr const char *SEARCH_TAG_POS_COLOR_DEFAULT = "#FF565656";
+
+        constexpr const char *SEARCH_TAG_SEARCH_COLOR = "search-tag-search-color";
+        constexpr const char *SEARCH_TAG_SEARCH_COLOR_DEFAULT = "#FF8A8A91";
+
+        constexpr const char *SEARCH_TAG_PITCH_ACCENT_COLOR = "search-tag-pitch-accent-color";
+        constexpr const char *SEARCH_TAG_PITCH_ACCENT_COLOR_DEFAULT = "#FF6640BE";
+
+        constexpr const char *SEARCH_TAG_DEFAULT_COLOR = "search-tag-default-color";
+        constexpr const char *SEARCH_TAG_DEFAULT_COLOR_DEFAULT = "#FF8A8A91";
 
         namespace SubtitleList
         {

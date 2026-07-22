@@ -366,6 +366,13 @@ class Settings : public QObject
     )
 
     Q_PROPERTY(
+        double interfaceSubtitleSecondaryOffset
+        READ interfaceSubtitleSecondaryOffset
+        WRITE setInterfaceSubtitleSecondaryOffset
+        NOTIFY interfaceSubtitleSecondaryOffsetChanged
+    )
+
+    Q_PROPERTY(
         double interfaceSubtitleStroke
         READ interfaceSubtitleStroke
         WRITE setInterfaceSubtitleStroke
@@ -422,6 +429,13 @@ class Settings : public QObject
     )
 
     Q_PROPERTY(
+        QColor interfacePopupBackgroundColor
+        READ interfacePopupBackgroundColor
+        WRITE setInterfacePopupBackgroundColor
+        NOTIFY interfacePopupBackgroundColorChanged
+    )
+
+    Q_PROPERTY(
         QFont interfaceSearchExpressionFont
         READ interfaceSearchExpressionFont
         WRITE setInterfaceSearchExpressionFont
@@ -461,6 +475,125 @@ class Settings : public QObject
         READ interfaceSearchKanjiFont
         WRITE setInterfaceSearchKanjiFont
         NOTIFY interfaceSearchKanjiFontChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchExpressionColor
+        READ interfaceSearchExpressionColor
+        WRITE setInterfaceSearchExpressionColor
+        NOTIFY interfaceSearchExpressionColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchReadingColor
+        READ interfaceSearchReadingColor
+        WRITE setInterfaceSearchReadingColor
+        NOTIFY interfaceSearchReadingColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchConjColor
+        READ interfaceSearchConjColor
+        WRITE setInterfaceSearchConjColor
+        NOTIFY interfaceSearchConjColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagColor
+        READ interfaceSearchTagColor
+        WRITE setInterfaceSearchTagColor
+        NOTIFY interfaceSearchTagColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchGlossaryColor
+        READ interfaceSearchGlossaryColor
+        WRITE setInterfaceSearchGlossaryColor
+        NOTIFY interfaceSearchGlossaryColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchKanjiColor
+        READ interfaceSearchKanjiColor
+        WRITE setInterfaceSearchKanjiColor
+        NOTIFY interfaceSearchKanjiColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagNameColor
+        READ interfaceSearchTagNameColor
+        WRITE setInterfaceSearchTagNameColor
+        NOTIFY interfaceSearchTagNameColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagExpressionColor
+        READ interfaceSearchTagExpressionColor
+        WRITE setInterfaceSearchTagExpressionColor
+        NOTIFY interfaceSearchTagExpressionColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagPopularColor
+        READ interfaceSearchTagPopularColor
+        WRITE setInterfaceSearchTagPopularColor
+        NOTIFY interfaceSearchTagPopularColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagFrequentColor
+        READ interfaceSearchTagFrequentColor
+        WRITE setInterfaceSearchTagFrequentColor
+        NOTIFY interfaceSearchTagFrequentColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagArchaismColor
+        READ interfaceSearchTagArchaismColor
+        WRITE setInterfaceSearchTagArchaismColor
+        NOTIFY interfaceSearchTagArchaismColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagDictionaryColor
+        READ interfaceSearchTagDictionaryColor
+        WRITE setInterfaceSearchTagDictionaryColor
+        NOTIFY interfaceSearchTagDictionaryColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagFrequencyColor
+        READ interfaceSearchTagFrequencyColor
+        WRITE setInterfaceSearchTagFrequencyColor
+        NOTIFY interfaceSearchTagFrequencyColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagPosColor
+        READ interfaceSearchTagPosColor
+        WRITE setInterfaceSearchTagPosColor
+        NOTIFY interfaceSearchTagPosColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagSearchColor
+        READ interfaceSearchTagSearchColor
+        WRITE setInterfaceSearchTagSearchColor
+        NOTIFY interfaceSearchTagSearchColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagPitchAccentColor
+        READ interfaceSearchTagPitchAccentColor
+        WRITE setInterfaceSearchTagPitchAccentColor
+        NOTIFY interfaceSearchTagPitchAccentColorChanged
+    )
+
+    Q_PROPERTY(
+        QColor interfaceSearchTagDefaultColor
+        READ interfaceSearchTagDefaultColor
+        WRITE setInterfaceSearchTagDefaultColor
+        NOTIFY interfaceSearchTagDefaultColorChanged
     )
 
     Q_PROPERTY(
@@ -1516,6 +1649,26 @@ public:
         double value = Keys::Interface::Subtitle::OFFSET_DEFAULT);
 
     /**
+     * @brief Gets the secondary subtitle top offset as a percentage of
+     * window height.
+     *
+     * @return The secondary subtitle top offset as a percentage of window
+     * height.
+     */
+    [[nodiscard]]
+    double interfaceSubtitleSecondaryOffset() const noexcept;
+
+    /**
+     * @brief Sets the secondary subtitle top offset as a percentage of
+     * window height.
+     *
+     * @param value The secondary subtitle top offset as a percentage of
+     * window height.
+     */
+    void setInterfaceSubtitleSecondaryOffset(
+        double value = Keys::Interface::Subtitle::SECONDARY_OFFSET_DEFAULT);
+
+    /**
      * @brief Gets the subtitle stroke width.
      *
      * @return The subtitle stroke width.
@@ -1626,6 +1779,24 @@ public:
      */
     void setInterfacePopupHeight(
         int value = Keys::Interface::POPUP_HEIGHT_DEFAULT);
+
+    /**
+     * @brief Gets the search popup background color. Alpha 0 means the
+     * theme's window color should be used.
+     *
+     * @return The search popup background color.
+     */
+    [[nodiscard]]
+    QColor interfacePopupBackgroundColor() const noexcept;
+
+    /**
+     * @brief Sets the search popup background color.
+     *
+     * @param value The search popup background color.
+     */
+    void setInterfacePopupBackgroundColor(
+        const QColor &value =
+            Keys::Interface::POPUP_BACKGROUND_COLOR_DEFAULT);
 
     /**
      * @brief Gets if the search panel should be shown in a separate window.
@@ -1740,6 +1911,293 @@ public:
      */
     void setInterfaceSearchKanjiFont(
         const QFont &value = Keys::Interface::SEARCH_KANJI_FONT_DEFAULT);
+
+    /**
+     * @brief Get the search expression text color. Alpha 0 means the theme's
+     * text color should be used.
+     *
+     * @return The search expression text color.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchExpressionColor() const noexcept;
+
+    /**
+     * @brief Set the search expression text color.
+     *
+     * @param value The search expression text color.
+     */
+    void setInterfaceSearchExpressionColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_EXPRESSION_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the search reading text color. Alpha 0 means the theme's
+     * text color should be used.
+     *
+     * @return The search reading text color.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchReadingColor() const noexcept;
+
+    /**
+     * @brief Set the search reading text color.
+     *
+     * @param value The search reading text color.
+     */
+    void setInterfaceSearchReadingColor(
+        const QColor &value = Keys::Interface::SEARCH_READING_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the search conjugation explanation text color. Alpha 0
+     * means the theme's text color should be used.
+     *
+     * @return The search conjugation explanation text color.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchConjColor() const noexcept;
+
+    /**
+     * @brief Set the search conjugation explanation text color.
+     *
+     * @param value The search conjugation explanation text color.
+     */
+    void setInterfaceSearchConjColor(
+        const QColor &value = Keys::Interface::SEARCH_CONJ_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the search tag text color.
+     *
+     * @return The search tag text color.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagColor() const noexcept;
+
+    /**
+     * @brief Set the search tag text color.
+     *
+     * @param value The search tag text color.
+     */
+    void setInterfaceSearchTagColor(
+        const QColor &value = Keys::Interface::SEARCH_TAG_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the search glossary text color. Alpha 0 means the theme's
+     * text color should be used.
+     *
+     * @return The search glossary text color.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchGlossaryColor() const noexcept;
+
+    /**
+     * @brief Set the search glossary text color.
+     *
+     * @param value The search glossary text color.
+     */
+    void setInterfaceSearchGlossaryColor(
+        const QColor &value = Keys::Interface::SEARCH_GLOSSARY_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the search kanji text color. Alpha 0 means the theme's
+     * text color should be used.
+     *
+     * @return The search kanji text color.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchKanjiColor() const noexcept;
+
+    /**
+     * @brief Set the search kanji text color.
+     *
+     * @param value The search kanji text color.
+     */
+    void setInterfaceSearchKanjiColor(
+        const QColor &value = Keys::Interface::SEARCH_KANJI_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of "name" tag chips.
+     *
+     * @return The background color of "name" tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagNameColor() const noexcept;
+
+    /**
+     * @brief Set the background color of "name" tag chips.
+     *
+     * @param value The background color of "name" tag chips.
+     */
+    void setInterfaceSearchTagNameColor(
+        const QColor &value = Keys::Interface::SEARCH_TAG_NAME_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of "expression" tag chips.
+     *
+     * @return The background color of "expression" tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagExpressionColor() const noexcept;
+
+    /**
+     * @brief Set the background color of "expression" tag chips.
+     *
+     * @param value The background color of "expression" tag chips.
+     */
+    void setInterfaceSearchTagExpressionColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_EXPRESSION_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of "popular" tag chips.
+     *
+     * @return The background color of "popular" tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagPopularColor() const noexcept;
+
+    /**
+     * @brief Set the background color of "popular" tag chips.
+     *
+     * @param value The background color of "popular" tag chips.
+     */
+    void setInterfaceSearchTagPopularColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_POPULAR_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of "frequent" tag chips.
+     *
+     * @return The background color of "frequent" tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagFrequentColor() const noexcept;
+
+    /**
+     * @brief Set the background color of "frequent" tag chips.
+     *
+     * @param value The background color of "frequent" tag chips.
+     */
+    void setInterfaceSearchTagFrequentColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_FREQUENT_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of "archaism" tag chips.
+     *
+     * @return The background color of "archaism" tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagArchaismColor() const noexcept;
+
+    /**
+     * @brief Set the background color of "archaism" tag chips.
+     *
+     * @param value The background color of "archaism" tag chips.
+     */
+    void setInterfaceSearchTagArchaismColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_ARCHAISM_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of dictionary tag chips.
+     *
+     * @return The background color of dictionary tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagDictionaryColor() const noexcept;
+
+    /**
+     * @brief Set the background color of dictionary tag chips.
+     *
+     * @param value The background color of dictionary tag chips.
+     */
+    void setInterfaceSearchTagDictionaryColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_DICTIONARY_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of frequency tag chips.
+     *
+     * @return The background color of frequency tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagFrequencyColor() const noexcept;
+
+    /**
+     * @brief Set the background color of frequency tag chips.
+     *
+     * @param value The background color of frequency tag chips.
+     */
+    void setInterfaceSearchTagFrequencyColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_FREQUENCY_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of "partOfSpeech" tag chips.
+     *
+     * @return The background color of "partOfSpeech" tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagPosColor() const noexcept;
+
+    /**
+     * @brief Set the background color of "partOfSpeech" tag chips.
+     *
+     * @param value The background color of "partOfSpeech" tag chips.
+     */
+    void setInterfaceSearchTagPosColor(
+        const QColor &value = Keys::Interface::SEARCH_TAG_POS_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of "search" tag chips.
+     *
+     * @return The background color of "search" tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagSearchColor() const noexcept;
+
+    /**
+     * @brief Set the background color of "search" tag chips.
+     *
+     * @param value The background color of "search" tag chips.
+     */
+    void setInterfaceSearchTagSearchColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_SEARCH_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of pitch accent dictionary tag chips.
+     *
+     * @return The background color of pitch accent dictionary tag chips.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagPitchAccentColor() const noexcept;
+
+    /**
+     * @brief Set the background color of pitch accent dictionary tag chips.
+     *
+     * @param value The background color of pitch accent dictionary tag chips.
+     */
+    void setInterfaceSearchTagPitchAccentColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_PITCH_ACCENT_COLOR_DEFAULT);
+
+    /**
+     * @brief Get the background color of tag chips of any other category.
+     *
+     * @return The background color of tag chips of any other category.
+     */
+    [[nodiscard]]
+    QColor interfaceSearchTagDefaultColor() const noexcept;
+
+    /**
+     * @brief Set the background color of tag chips of any other category.
+     *
+     * @param value The background color of tag chips of any other category.
+     */
+    void setInterfaceSearchTagDefaultColor(
+        const QColor &value =
+            Keys::Interface::SEARCH_TAG_DEFAULT_COLOR_DEFAULT);
 
     /**
      * @brief Get if the subtitle list should be shown in a separate window.
@@ -2276,6 +2734,14 @@ signals:
     void interfaceSubtitleOffsetChanged(double value);
 
     /**
+     * @brief Emitted when the interface secondary subtitle offset setting is
+     * changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSubtitleSecondaryOffsetChanged(double value);
+
+    /**
      * @brief Emitted when the interface subtitle stroke setting is changed.
      *
      * @param value The new value.
@@ -2334,6 +2800,14 @@ signals:
     void interfacePopupHeightChanged(int value);
 
     /**
+     * @brief Emitted when the interface popup background color setting is
+     * changed.
+     *
+     * @param value The new value.
+     */
+    void interfacePopupBackgroundColorChanged(const QColor &value);
+
+    /**
      * @brief Emitted when the interface search expression font setting is
      * changed.
      *
@@ -2378,6 +2852,132 @@ signals:
      * @param value The new value.
      */
     void interfaceSearchKanjiFontChanged(const QFont &value);
+
+    /**
+     * @brief Emitted when the interface search expression color setting is
+     * changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchExpressionColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the interface search reading color setting is
+     * changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchReadingColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the interface search conjugation explanation color
+     * setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchConjColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the interface search tag color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the interface search glossary color setting is
+     * changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchGlossaryColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the interface search kanji color setting is
+     * changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchKanjiColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the "name" tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagNameColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the "expression" tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagExpressionColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the "popular" tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagPopularColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the "frequent" tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagFrequentColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the "archaism" tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagArchaismColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the dictionary tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagDictionaryColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the frequency tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagFrequencyColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the "partOfSpeech" tag chip color setting is
+     * changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagPosColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the "search" tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagSearchColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the pitch accent dictionary tag chip color setting
+     * is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagPitchAccentColorChanged(const QColor &value);
+
+    /**
+     * @brief Emitted when the default tag chip color setting is changed.
+     *
+     * @param value The new value.
+     */
+    void interfaceSearchTagDefaultColorChanged(const QColor &value);
 
     /**
      * @brief Emitted when the interface subtitle list window setting is
@@ -2698,6 +3298,12 @@ private:
          * subtitles */
         double subtitleOffset{Keys::Interface::Subtitle::OFFSET_DEFAULT};
 
+        /* Percentage of the height of the window that should appear above
+         * secondary subtitles */
+        double subtitleSecondaryOffset{
+            Keys::Interface::Subtitle::SECONDARY_OFFSET_DEFAULT
+        };
+
         /* Stroke size to use on subtitles */
         double subtitleStroke{Keys::Interface::Subtitle::STROKE_DEFAULT};
 
@@ -2725,6 +3331,11 @@ private:
         /* The height of the search popup */
         int popupHeight{Keys::Interface::POPUP_HEIGHT_DEFAULT};
 
+        /* Background color of the search popup; alpha 0 for theme default */
+        QColor popupBackgroundColor{
+            Keys::Interface::POPUP_BACKGROUND_COLOR_DEFAULT
+        };
+
         /* true if the search function should be opened in a new window */
         bool searchWindow{Keys::Interface::SEARCH_WINDOW_DEFAULT};
 
@@ -2747,6 +3358,66 @@ private:
 
         /* The font to use for kanji entries */
         QFont searchKanjiFont{Keys::Interface::SEARCH_KANJI_FONT_DEFAULT};
+
+        /* Text color for search expressions; alpha 0 for theme default */
+        QColor searchExpressionColor{
+            Keys::Interface::SEARCH_EXPRESSION_COLOR_DEFAULT
+        };
+
+        /* Text color for search readings; alpha 0 for theme default */
+        QColor searchReadingColor{
+            Keys::Interface::SEARCH_READING_COLOR_DEFAULT
+        };
+
+        /* Text color for conjugation explanations; alpha 0 for theme
+         * default */
+        QColor searchConjColor{Keys::Interface::SEARCH_CONJ_COLOR_DEFAULT};
+
+        /* Text color for tags */
+        QColor searchTagColor{Keys::Interface::SEARCH_TAG_COLOR_DEFAULT};
+
+        /* Text color for glossaries; alpha 0 for theme default */
+        QColor searchGlossaryColor{
+            Keys::Interface::SEARCH_GLOSSARY_COLOR_DEFAULT
+        };
+
+        /* Text color for kanji entries; alpha 0 for theme default */
+        QColor searchKanjiColor{Keys::Interface::SEARCH_KANJI_COLOR_DEFAULT};
+
+        /* Background colors of tag chips, by tag category */
+        QColor searchTagNameColor{
+            Keys::Interface::SEARCH_TAG_NAME_COLOR_DEFAULT
+        };
+        QColor searchTagExpressionColor{
+            Keys::Interface::SEARCH_TAG_EXPRESSION_COLOR_DEFAULT
+        };
+        QColor searchTagPopularColor{
+            Keys::Interface::SEARCH_TAG_POPULAR_COLOR_DEFAULT
+        };
+        QColor searchTagFrequentColor{
+            Keys::Interface::SEARCH_TAG_FREQUENT_COLOR_DEFAULT
+        };
+        QColor searchTagArchaismColor{
+            Keys::Interface::SEARCH_TAG_ARCHAISM_COLOR_DEFAULT
+        };
+        QColor searchTagDictionaryColor{
+            Keys::Interface::SEARCH_TAG_DICTIONARY_COLOR_DEFAULT
+        };
+        QColor searchTagFrequencyColor{
+            Keys::Interface::SEARCH_TAG_FREQUENCY_COLOR_DEFAULT
+        };
+        QColor searchTagPosColor{
+            Keys::Interface::SEARCH_TAG_POS_COLOR_DEFAULT
+        };
+        QColor searchTagSearchColor{
+            Keys::Interface::SEARCH_TAG_SEARCH_COLOR_DEFAULT
+        };
+        QColor searchTagPitchAccentColor{
+            Keys::Interface::SEARCH_TAG_PITCH_ACCENT_COLOR_DEFAULT
+        };
+        QColor searchTagDefaultColor{
+            Keys::Interface::SEARCH_TAG_DEFAULT_COLOR_DEFAULT
+        };
 
         /* true if the subtitle list should be opened in it's own window */
         bool subtitleListWindow{Keys::Interface::SubtitleList::WINDOW_DEFAULT};

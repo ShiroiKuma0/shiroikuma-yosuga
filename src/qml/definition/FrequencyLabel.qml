@@ -11,5 +11,5 @@ MetaLabel {
     text: root.name.length > 0 ?
               `${root.name} <font color='black'>${root.value}</font>` :
               `<font color='black'>${root.value}</font>`
-    color: "#5cb85c"
+    color: MementoSettings.interfaceSearchTagFrequencyColor
 }

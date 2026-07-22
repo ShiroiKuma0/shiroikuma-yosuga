@@ -230,6 +230,29 @@ Page {
                         Label {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Secondary subtitle top offset as a percentage of window height")
+                        }
+                        TextField {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 100
+                            validator: DoubleValidator {
+                                bottom: 0.0
+                                top: 1.0
+                            }
+                            placeholderText: qsTr("Percent")
+                            text: MementoSettings.interfaceSubtitleSecondaryOffset
+                            onEditingFinished: MementoSettings.interfaceSubtitleSecondaryOffset = text
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
                             text: qsTr("Stroke size")
                         }
                         TextField {
@@ -467,6 +490,58 @@ Page {
                         Label {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Size")
+                        }
+                        SpinBox {
+                            Layout.alignment: Qt.AlignRight
+                            editable: true
+                            from: 1
+                            to: 512
+                            value: MementoSettings.interfaceSearchExpressionFont.pointSize
+                            onValueModified: {
+                                const f = MementoSettings.interfaceSearchExpressionFont;
+                                f.pointSize = value;
+                                MementoSettings.interfaceSearchExpressionFont = f;
+                            }
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Color")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchExpressionColor
+                                radius: 10
+                            }
+                            onClicked: searchExpressionColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: searchExpressionColorDialog
+                            title: qsTr("Select Term Expression Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchExpressionColor
+                            onAccepted: MementoSettings.interfaceSearchExpressionColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
                             text: qsTr("Term Reading Font")
                         }
                         Button {
@@ -521,6 +596,58 @@ Page {
                                 f.italic = checked;
                                 MementoSettings.interfaceSearchReadingFont = f;
                             }
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Size")
+                        }
+                        SpinBox {
+                            Layout.alignment: Qt.AlignRight
+                            editable: true
+                            from: 1
+                            to: 512
+                            value: MementoSettings.interfaceSearchReadingFont.pointSize
+                            onValueModified: {
+                                const f = MementoSettings.interfaceSearchReadingFont;
+                                f.pointSize = value;
+                                MementoSettings.interfaceSearchReadingFont = f;
+                            }
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Color")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchReadingColor
+                                radius: 10
+                            }
+                            onClicked: searchReadingColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: searchReadingColorDialog
+                            title: qsTr("Select Term Reading Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchReadingColor
+                            onAccepted: MementoSettings.interfaceSearchReadingColor = selectedColor
                         }
                     }
 
@@ -597,6 +724,58 @@ Page {
                         Label {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Size")
+                        }
+                        SpinBox {
+                            Layout.alignment: Qt.AlignRight
+                            editable: true
+                            from: 1
+                            to: 512
+                            value: MementoSettings.interfaceSearchConjFont.pointSize
+                            onValueModified: {
+                                const f = MementoSettings.interfaceSearchConjFont;
+                                f.pointSize = value;
+                                MementoSettings.interfaceSearchConjFont = f;
+                            }
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Color")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchConjColor
+                                radius: 10
+                            }
+                            onClicked: searchConjColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: searchConjColorDialog
+                            title: qsTr("Select Term Conjugation Explanation Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchConjColor
+                            onAccepted: MementoSettings.interfaceSearchConjColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
                             text: qsTr("Tag Font")
                         }
                         Button {
@@ -651,6 +830,58 @@ Page {
                                 f.italic = checked;
                                 MementoSettings.interfaceSearchTagFont = f;
                             }
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Size")
+                        }
+                        SpinBox {
+                            Layout.alignment: Qt.AlignRight
+                            editable: true
+                            from: 1
+                            to: 512
+                            value: MementoSettings.interfaceSearchTagFont.pointSize
+                            onValueModified: {
+                                const f = MementoSettings.interfaceSearchTagFont;
+                                f.pointSize = value;
+                                MementoSettings.interfaceSearchTagFont = f;
+                            }
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Color")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagColor
+                                radius: 10
+                            }
+                            onClicked: searchTagColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: searchTagColorDialog
+                            title: qsTr("Select Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagColor
+                            onAccepted: MementoSettings.interfaceSearchTagColor = selectedColor
                         }
                     }
 
@@ -727,6 +958,58 @@ Page {
                         Label {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Size")
+                        }
+                        SpinBox {
+                            Layout.alignment: Qt.AlignRight
+                            editable: true
+                            from: 1
+                            to: 512
+                            value: MementoSettings.interfaceSearchGlossaryFont.pointSize
+                            onValueModified: {
+                                const f = MementoSettings.interfaceSearchGlossaryFont;
+                                f.pointSize = value;
+                                MementoSettings.interfaceSearchGlossaryFont = f;
+                            }
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Color")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchGlossaryColor
+                                radius: 10
+                            }
+                            onClicked: searchGlossaryColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: searchGlossaryColorDialog
+                            title: qsTr("Select Glossary Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchGlossaryColor
+                            onAccepted: MementoSettings.interfaceSearchGlossaryColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
                             text: qsTr("Kanji Font")
                         }
                         Button {
@@ -783,6 +1066,374 @@ Page {
                             }
                         }
                     }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Size")
+                        }
+                        SpinBox {
+                            Layout.alignment: Qt.AlignRight
+                            editable: true
+                            from: 1
+                            to: 512
+                            value: MementoSettings.interfaceSearchKanjiFont.pointSize
+                            onValueModified: {
+                                const f = MementoSettings.interfaceSearchKanjiFont;
+                                f.pointSize = value;
+                                MementoSettings.interfaceSearchKanjiFont = f;
+                            }
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Color")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchKanjiColor
+                                radius: 10
+                            }
+                            onClicked: searchKanjiColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: searchKanjiColorDialog
+                            title: qsTr("Select Kanji Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchKanjiColor
+                            onAccepted: MementoSettings.interfaceSearchKanjiColor = selectedColor
+                        }
+                    }
+                }
+            }
+
+            SettingsBox {
+                id: tagColorsBox
+                Layout.preferredWidth: root.preferredWidth
+                Layout.alignment: Qt.AlignHCenter
+                title: qsTr("Tag Colors")
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: root.groupSpacing
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Name")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagNameColor
+                                radius: 10
+                            }
+                            onClicked: tagNameColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagNameColorDialog
+                            title: qsTr("Select Name Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagNameColor
+                            onAccepted: MementoSettings.interfaceSearchTagNameColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Expression")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagExpressionColor
+                                radius: 10
+                            }
+                            onClicked: tagExpressionColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagExpressionColorDialog
+                            title: qsTr("Select Expression Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagExpressionColor
+                            onAccepted: MementoSettings.interfaceSearchTagExpressionColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Popular")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagPopularColor
+                                radius: 10
+                            }
+                            onClicked: tagPopularColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagPopularColorDialog
+                            title: qsTr("Select Popular Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagPopularColor
+                            onAccepted: MementoSettings.interfaceSearchTagPopularColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Frequent")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagFrequentColor
+                                radius: 10
+                            }
+                            onClicked: tagFrequentColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagFrequentColorDialog
+                            title: qsTr("Select Frequent Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagFrequentColor
+                            onAccepted: MementoSettings.interfaceSearchTagFrequentColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Archaism")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagArchaismColor
+                                radius: 10
+                            }
+                            onClicked: tagArchaismColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagArchaismColorDialog
+                            title: qsTr("Select Archaism Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagArchaismColor
+                            onAccepted: MementoSettings.interfaceSearchTagArchaismColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Dictionary")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagDictionaryColor
+                                radius: 10
+                            }
+                            onClicked: tagDictionaryColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagDictionaryColorDialog
+                            title: qsTr("Select Dictionary Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagDictionaryColor
+                            onAccepted: MementoSettings.interfaceSearchTagDictionaryColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Frequency")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagFrequencyColor
+                                radius: 10
+                            }
+                            onClicked: tagFrequencyColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagFrequencyColorDialog
+                            title: qsTr("Select Frequency Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagFrequencyColor
+                            onAccepted: MementoSettings.interfaceSearchTagFrequencyColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Part of speech")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagPosColor
+                                radius: 10
+                            }
+                            onClicked: tagPosColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagPosColorDialog
+                            title: qsTr("Select Part of Speech Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagPosColor
+                            onAccepted: MementoSettings.interfaceSearchTagPosColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Search")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagSearchColor
+                                radius: 10
+                            }
+                            onClicked: tagSearchColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagSearchColorDialog
+                            title: qsTr("Select Search Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagSearchColor
+                            onAccepted: MementoSettings.interfaceSearchTagSearchColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Pitch accent dictionary")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagPitchAccentColor
+                                radius: 10
+                            }
+                            onClicked: tagPitchAccentColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagPitchAccentColorDialog
+                            title: qsTr("Select Pitch Accent Dictionary Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagPitchAccentColor
+                            onAccepted: MementoSettings.interfaceSearchTagPitchAccentColor = selectedColor
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Other")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfaceSearchTagDefaultColor
+                                radius: 10
+                            }
+                            onClicked: tagDefaultColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: tagDefaultColorDialog
+                            title: qsTr("Select Other Tag Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfaceSearchTagDefaultColor
+                            onAccepted: MementoSettings.interfaceSearchTagDefaultColor = selectedColor
+                        }
+                    }
                 }
             }
 
@@ -829,6 +1480,34 @@ Page {
                             to: 99999
                             value: MementoSettings.interfacePopupHeight
                             onValueModified: MementoSettings.interfacePopupHeight = value
+                        }
+                    }
+
+                    SettingsBoxSeparator {
+                        Layout.fillWidth: true
+                    }
+
+                    RowLayout {
+                        Label {
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignLeft
+                            text: qsTr("Background color (transparent for theme default)")
+                        }
+                        Button {
+                            Layout.alignment: Qt.AlignRight
+                            Layout.preferredWidth: 50
+                            contentItem: Rectangle {
+                                color: MementoSettings.interfacePopupBackgroundColor
+                                radius: 10
+                            }
+                            onClicked: popupBackgroundColorDialog.open()
+                        }
+                        ColorDialog {
+                            id: popupBackgroundColorDialog
+                            title: qsTr("Select Popup Background Color")
+                            options: ColorDialog.ShowAlphaChannel
+                            selectedColor: MementoSettings.interfacePopupBackgroundColor
+                            onAccepted: MementoSettings.interfacePopupBackgroundColor = selectedColor
                         }
                     }
                 }
