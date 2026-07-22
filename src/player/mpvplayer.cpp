@@ -762,7 +762,16 @@ void MpvPlayer::handleMpvEvent(mpv_event *event)
         ::mpv_get_property(m_mpv, "video-params/w", MPV_FORMAT_INT64, &w);
         int64_t h = 0;
         ::mpv_get_property(m_mpv, "video-params/h", MPV_FORMAT_INT64, &h);
-        emit fileLoaded(w, h);
+        /* Fetch the path synchronously: the observed path property has not
+         * necessarily propagated yet when the first (command line) file
+         * loads, which used to keep such files out of the recents list. */
+        QString path;
+        if (char *rawPath = ::mpv_get_property_string(m_mpv, "path"))
+        {
+            path = QString::fromUtf8(rawPath);
+            ::mpv_free(rawPath);
+        }
+        emit fileLoaded(w, h, path);
         break;
     }
 

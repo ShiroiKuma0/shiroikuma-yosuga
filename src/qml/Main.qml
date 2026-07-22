@@ -186,15 +186,18 @@ ApplicationWindow {
                 }
             }
             onShutdown: Qt.quit()
-            onFileLoaded: function(w, h) {
+            onFileLoaded: function(w, h, path) {
                 if (MementoSettings.behaviorAutoFit)
                 {
                     root.updateWindowSize(w, h);
                 }
 
-                if (player.state.path.length > 0)
+                const loadedPath = path.length > 0 ? path : player.state.path;
+                if (loadedPath.length > 0)
                 {
-                    MementoSettings.recentFilesAdd(player.state.path);
+                    MementoSettings.recentFilesAdd(loadedPath);
+                    /* persist immediately so recents survive any exit */
+                    MementoSettings.writeRecentSettings();
                 }
 
                 player.controller.play();

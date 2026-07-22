@@ -160,7 +160,7 @@ signals:
      * @param width The width of the video content in pixels.
      * @param height The height of the video content in pixels.
      */
-    void fileLoaded(int64_t width, int64_t height);
+    void fileLoaded(int64_t width, int64_t height, const QString &path);
 
     /**
      * @brief Emitted when the mpv instance has shutdown.
