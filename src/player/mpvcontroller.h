@@ -261,7 +261,7 @@ public:
      * (secondary) subtitles, so QML overlays can mimic mpv's rendering.
      *
      * @return A map with font, fontSize, scale, color, borderColor,
-     *         borderSize, backColor, bold, and italic.
+     *         borderSize, backColor, borderStyle, bold, and italic.
      */
     Q_INVOKABLE QVariantMap subtitleStyle() const;
 

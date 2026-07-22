@@ -373,6 +373,7 @@ QVariantMap MpvController::subtitleStyle() const
     style["borderColor"] = getString("sub-border-color");
     style["borderSize"] = getDouble("sub-border-size", 3);
     style["backColor"] = getString("sub-back-color");
+    style["borderStyle"] = getString("sub-border-style");
     style["bold"] = getFlag("sub-bold");
     style["italic"] = getFlag("sub-italic");
     return style;

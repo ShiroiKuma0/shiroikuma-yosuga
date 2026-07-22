@@ -441,9 +441,25 @@ MpvPlayer {
         Rectangle {
             id: backgroundRect
 
-            readonly property color backColor:
-                heldSecondarySubtitle.mpvColor(
-                    heldSecondarySubtitle.mpvStyle.backColor, "transparent")
+            /* mpv only draws a box behind the text in the box border
+             * styles — with the default outline-and-shadow the (opaque
+             * black by default) sub-back-color is never painted, so
+             * neither do we. background-box boxes use sub-back-color,
+             * opaque-box boxes the outline color. */
+            readonly property color backColor: {
+                const style = heldSecondarySubtitle.mpvStyle;
+                if (style.borderStyle === "background-box")
+                {
+                    return heldSecondarySubtitle.mpvColor(
+                        style.backColor, "transparent");
+                }
+                if (style.borderStyle === "opaque-box")
+                {
+                    return heldSecondarySubtitle.mpvColor(
+                        style.borderColor, "transparent");
+                }
+                return "transparent";
+            }
 
             anchors.fill: parent
             z: -1
