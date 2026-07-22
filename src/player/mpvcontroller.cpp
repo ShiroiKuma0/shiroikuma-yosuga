@@ -330,6 +330,46 @@ void MpvController::setSecondarySubtitleVisibility(bool visible)
     }
 }
 
+QVariantMap MpvController::subtitleStyle() const
+{
+    auto getString = [this] (const char *name) -> QString
+    {
+        char *value = nullptr;
+        QString result;
+        if (::mpv_get_property(handle(), name, MPV_FORMAT_STRING, &value) >= 0
+            && value)
+        {
+            result = value;
+            ::mpv_free(value);
+        }
+        return result;
+    };
+    auto getDouble = [this] (const char *name, double def) -> double
+    {
+        double value{def};
+        ::mpv_get_property(handle(), name, MPV_FORMAT_DOUBLE, &value);
+        return value;
+    };
+    auto getFlag = [this] (const char *name) -> bool
+    {
+        int value{0};
+        ::mpv_get_property(handle(), name, MPV_FORMAT_FLAG, &value);
+        return value != 0;
+    };
+
+    QVariantMap style;
+    style["font"] = getString("sub-font");
+    style["fontSize"] = getDouble("sub-font-size", 55);
+    style["scale"] = getDouble("sub-scale", 1);
+    style["color"] = getString("sub-color");
+    style["borderColor"] = getString("sub-border-color");
+    style["borderSize"] = getDouble("sub-border-size", 3);
+    style["backColor"] = getString("sub-back-color");
+    style["bold"] = getFlag("sub-bold");
+    style["italic"] = getFlag("sub-italic");
+    return style;
+}
+
 void MpvController::setSubtitleDelay(double delay)
 {
     if (::mpv_set_property_async(handle(), 0, "sub-delay", MPV_FORMAT_DOUBLE, &delay) < 0)

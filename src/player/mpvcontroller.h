@@ -27,6 +27,7 @@
 #include <QImage>
 #include <QPoint>
 #include <QSet>
+#include <QVariantMap>
 
 #include <mpv/client.h>
 
@@ -245,6 +246,15 @@ public:
      * @param visible true for visible subtitles, false otherwise.
      */
     Q_INVOKABLE void setSecondarySubtitleVisibility(bool visible);
+
+    /**
+     * @brief Fork: reads the mpv subtitle style options used to render
+     * (secondary) subtitles, so QML overlays can mimic mpv's rendering.
+     *
+     * @return A map with font, fontSize, scale, color, borderColor,
+     *         borderSize, backColor, bold, and italic.
+     */
+    Q_INVOKABLE QVariantMap subtitleStyle() const;
 
     /**
      * @brief Sets the subtitle delay.

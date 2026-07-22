@@ -333,6 +333,10 @@ MpvPlayer {
         property real cachedStart: 0
         property real cachedEnd: 0
 
+        /* mpv's sub-* style options — the same ones mpv itself renders the
+         * secondary subtitle with (sub-font, sub-color, mpv.conf included). */
+        property var mpvStyle: ({})
+
         readonly property bool overlapsPrimary:
             cachedText !== "" &&
             root.state.subtitle.text !== "" &&
@@ -349,11 +353,18 @@ MpvPlayer {
 
         horizontalAlignment: Text.AlignHCenter
         wrapMode: Text.Wrap
-        color: "white"
+        color: mpvColor(mpvStyle.color, "white")
         style: Text.Outline
-        styleColor: "black"
-        font.family: MementoSettings.interfaceSubtitleFont.family
-        font.pixelSize: root.height * MementoSettings.interfaceSubtitleScale * 0.6
+        styleColor: mpvColor(mpvStyle.borderColor, "black")
+        font.family: mpvStyle.font ? mpvStyle.font : "sans-serif"
+        font.bold: mpvStyle.bold ?? false
+        font.italic: mpvStyle.italic ?? false
+        /* mpv sizes subtitles as sub-font-size * sub-scale relative to a
+         * 720px-tall window */
+        font.pixelSize: Math.max(
+            1,
+            root.height * ((mpvStyle.fontSize ?? 55) * (mpvStyle.scale ?? 1)) / 720)
+        padding: backgroundRect.visible ? font.pixelSize * 0.15 : 0
 
         text: cachedText
         visible: MementoSettings.behaviorSecondarySubtitleCursorShow &&
@@ -362,6 +373,32 @@ MpvPlayer {
                  root.state.secondarySubtitle.text === "" &&
                  overlapsPrimary &&
                  !root.ocrMode
+        onVisibleChanged: {
+            if (visible)
+            {
+                heldSecondarySubtitle.mpvStyle = root.controller.subtitleStyle();
+            }
+        }
+
+        /* mpv color strings come as #RRGGBB / #AARRGGBB or r/g/b[/a] floats */
+        function mpvColor(value, fallback) {
+            if (!value)
+            {
+                return fallback;
+            }
+            if (value.startsWith("#"))
+            {
+                return value;
+            }
+            const parts = value.split("/").map(Number);
+            if (parts.length >= 3 && !parts.some(isNaN))
+            {
+                return Qt.rgba(
+                    parts[0], parts[1], parts[2],
+                    parts.length > 3 ? parts[3] : 1);
+            }
+            return fallback;
+        }
 
         function cacheSubtitle() {
             const sub = root.state.secondarySubtitle;
@@ -375,6 +412,19 @@ MpvPlayer {
 
         function clearCache() {
             heldSecondarySubtitle.cachedText = "";
+        }
+
+        Rectangle {
+            id: backgroundRect
+
+            readonly property color backColor:
+                heldSecondarySubtitle.mpvColor(
+                    heldSecondarySubtitle.mpvStyle.backColor, "transparent")
+
+            anchors.fill: parent
+            z: -1
+            color: backColor
+            visible: backColor.a > 0
         }
 
         Connections {
