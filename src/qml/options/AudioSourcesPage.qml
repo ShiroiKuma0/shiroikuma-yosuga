@@ -67,7 +67,7 @@ Page {
         Label {
             wrapMode: Text.WordWrap
 
-            text: qsTr("<p><b>Source Name</b>: The name of the audio source as it will appear in Memento.</p>
+            text: qsTr("<p><b>Source Name</b>: The name of the audio source as it will appear in 白い熊 縁.</p>
                         <p><b>URL</b>: The URL of the audio source. Supports inserting <b>{expression}</b> and
                             <b>{reading}</b> markers into the URL.</p>
                         <p><b>MD5 Skip Hash</b>: Audio that matches this MD5 hash will be ignored.</p>")
@@ -135,7 +135,7 @@ Page {
                             }
                             textRole: "text"
                             valueRole: "value"
-                            currentValue: rootDelegate.model.type
+                            Component.onCompleted: currentIndex = indexOfValue(rootDelegate.model.type)
                             onActivated: rootDelegate.model.type = currentValue
                         }
 

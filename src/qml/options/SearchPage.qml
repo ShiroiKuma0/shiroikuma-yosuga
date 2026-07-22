@@ -149,7 +149,7 @@ Page {
                             }
                             textRole: "text"
                             valueRole: "value"
-                            currentValue: MementoSettings.searchMethod
+                            Component.onCompleted: currentIndex = indexOfValue(MementoSettings.searchMethod)
                             onActivated: MementoSettings.searchMethod = currentValue
                         }
                     }
@@ -207,7 +207,7 @@ Page {
                             }
                             textRole: "text"
                             valueRole: "value"
-                            currentValue: MementoSettings.searchModifier
+                            Component.onCompleted: currentIndex = indexOfValue(MementoSettings.searchModifier)
                             onActivated: MementoSettings.searchModifier = currentValue
                         }
                     }
@@ -258,7 +258,7 @@ Page {
                             }
                             textRole: "text"
                             valueRole: "value"
-                            currentValue: MementoSettings.searchGlossaryStyle
+                            Component.onCompleted: currentIndex = indexOfValue(MementoSettings.searchGlossaryStyle)
                             onActivated: MementoSettings.searchGlossaryStyle = currentValue
                         }
                     }
@@ -314,7 +314,7 @@ Page {
                         Label {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignLeft
-                            text: qsTr("Hide mpv subtitles while Memento subtitles are visible")
+                            text: qsTr("Hide mpv subtitles while 白い熊 縁 subtitles are visible")
                         }
                         Switch {
                             Layout.alignment: Qt.AlignRight
@@ -331,7 +331,7 @@ Page {
                         Label {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignLeft
-                            text: qsTr("Hide Memento subtitles while playing media")
+                            text: qsTr("Hide 白い熊 縁 subtitles while playing media")
                         }
                         Switch {
                             Layout.alignment: Qt.AlignRight

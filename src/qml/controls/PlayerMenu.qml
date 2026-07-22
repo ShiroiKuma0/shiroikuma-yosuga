@@ -580,7 +580,7 @@ MenuBar {
         }
 
         Action {
-            text: qsTr("&About Memento")
+            text: qsTr("&About 白い熊 縁")
             onTriggered: aboutWindow.show()
         }
     }

@@ -11,7 +11,7 @@ ApplicationWindow {
     height: 720
     visibility: Window.Windowed
     color: "black"
-    title: player.state.title ? qsTr("%1 - Memento").arg(player.state.title) : qsTr("Memento")
+    title: player.state.title ? qsTr("%1 - 白い熊 縁").arg(player.state.title) : qsTr("白い熊 縁")
 
     /* Handle fullscreen on non-Windows platforms */
     Binding {
@@ -338,7 +338,7 @@ ApplicationWindow {
                         "<p>Dictionaries can be found <a href='https://yomitan.wiki/dictionaries/'>here</a>.</p>" +
                         "<p>To install a dictionary, go to %1.</p>"
                     ).arg(Features.isMacos ?
-                        qsTr("Memento → Preferences → Dictionary") :
+                        qsTr("白い熊 縁 → Preferences → Dictionary") :
                         qsTr("Settings → Options → Dictionary")
                     )
                     onLinkActivated: (link) => Qt.openUrlExternally(link)
@@ -368,7 +368,7 @@ ApplicationWindow {
                         "This can be disabled at any time by going to %1.\n" +
                         "This will check GitHub's API when Memento is launched."
                     ).arg(Features.isMacos?
-                              qsTr("Memento → Preferences → Application") :
+                              qsTr("白い熊 縁 → Preferences → Application") :
                               qsTr("Settings → Options → Application")
                     )
                 }

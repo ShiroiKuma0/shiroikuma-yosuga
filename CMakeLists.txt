@@ -4,7 +4,7 @@ project(
     Memento
     VERSION 2.0.2
     DESCRIPTION "An mpv-based video player for studying Japanese"
-	HOMEPAGE_URL "https://ripose-jp.github.io/Memento"
+	HOMEPAGE_URL "https://github.com/ShiroiKuma0/shiroikuma-yosuga"
     LANGUAGES C CXX
 )
 

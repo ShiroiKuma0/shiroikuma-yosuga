@@ -26,8 +26,8 @@ namespace Constants
 namespace Links
 {
 
-constexpr const char *GITHUB_API = "https://api.github.com/repos/ripose-jp/memento/releases/latest";
-constexpr const char *GITHUB_RELEASES = "https://github.com/ripose-jp/memento/releases";
+constexpr const char *GITHUB_API = "https://api.github.com/repos/ShiroiKuma0/shiroikuma-yosuga/releases/latest";
+constexpr const char *GITHUB_RELEASES = "https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases";
 
 } // Links
 

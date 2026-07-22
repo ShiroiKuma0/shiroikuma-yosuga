@@ -1,6 +1,6 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
-Name=Memento
+Name=白い熊 縁
 Comment=A video player for studying Japanese
 GenericName=Video Player
 Exec=memento %U

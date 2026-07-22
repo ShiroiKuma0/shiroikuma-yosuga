@@ -5,7 +5,7 @@ import Ripose.Memento
 
 Window {
     id: root
-    title: qsTr("About Memento")
+    title: qsTr("About 白い熊 縁")
     height: rootLayout.implicitHeight + 20
     width: rootLayout.implicitWidth + 20
     color: MementoPalette.window
@@ -26,7 +26,7 @@ Window {
 
             Label {
                 id: mementoText
-                text: qsTr("Memento")
+                text: qsTr("白い熊 縁")
                 font.pixelSize: 96
             }
         }
@@ -47,14 +47,14 @@ Window {
         Label {
             Layout.alignment: Qt.AlignHCenter
             textFormat: Text.RichText
-            text: qsTr("<p><a href=\"https://ripose-jp.github.io/Memento/\">Project Site</a></p>")
+            text: qsTr("<p><a href=\"https://github.com/ShiroiKuma0/shiroikuma-yosuga\">GitHub</a></p>")
             onLinkActivated: (link) => Qt.openUrlExternally(link)
         }
 
         Label {
             Layout.alignment: Qt.AlignHCenter
             textFormat: Text.RichText
-            text: qsTr("<p><a href=\"https://github.com/ripose-jp/Memento\">GitHub</a></p>")
+            text: qsTr("<p>Fork of <a href=\"https://github.com/ripose-jp/Memento\">Memento</a></p>")
             onLinkActivated: (link) => Qt.openUrlExternally(link)
         }
     }
