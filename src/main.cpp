@@ -509,13 +509,11 @@ int main(int argc, char *argv[])
         QQuickStyle::setStyle(QStringLiteral("FluentWinUI3"));
     }
 #else
-    /* Try to avoid overriding the default theme unless it's org.kde.desktop */
-    if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE") &&
-        QQuickStyle::name() == "org.kde.desktop")
-    {
-        QQuickStyle::setStyle(QStringLiteral("org.kde.breeze"));
-        QQuickStyle::setFallbackStyle(QStringLiteral("Fusion"));
-    }
+    /* Fork: upstream swaps org.kde.desktop for org.kde.breeze here, but the
+     * breeze QML style floods the console with ComboBox SafeArea TypeErrors
+     * on Qt 6.9.2 (qqc2-breeze-style mismatch) while org.kde.desktop runs
+     * clean — so keep the platform default. QT_QUICK_CONTROLS_STYLE still
+     * overrides. */
 #endif // defined(Q_OS_MACOS) || defined(Q_OS_WIN)
 
     Migration::updateSettings();

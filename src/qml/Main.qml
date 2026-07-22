@@ -366,7 +366,7 @@ ApplicationWindow {
                     text: qsTr(
                         "Do you want to check for updates on launch?\n\n" +
                         "This can be disabled at any time by going to %1.\n" +
-                        "This will check GitHub's API when Memento is launched."
+                        "This will check GitHub's API when 白い熊 縁 is launched."
                     ).arg(Features.isMacos?
                               qsTr("白い熊 縁 → Preferences → Application") :
                               qsTr("Settings → Options → Application")

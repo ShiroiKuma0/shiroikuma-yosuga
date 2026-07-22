@@ -54,7 +54,7 @@ Window {
                 text: qsTr(
                     "<p>" +
                         "A marker is a section of text enclosed in curly braces like <code>{subtitle}</code>. " +
-                        "When Memento's template processor sees a marker, it replaces it with its associated value. " +
+                        "When 白い熊 縁's template processor sees a marker, it replaces it with its associated value. " +
                         "In the case of <code>{subtitle}</code> that is the currently displayed subtitle." +
                     "</p>" +
                     "<p>" +

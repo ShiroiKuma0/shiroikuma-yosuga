@@ -331,7 +331,7 @@ void Migration::updateSettings()
     else if (version > Keys::Version::CURRENT)
     {
         qWarning() <<
-            "The Memento settings found belong to a newer version.\n"
+            "The 白い熊 縁 settings found belong to a newer version.\n"
             "No guarantees can be made that nothing will break or get lost.";
     }
 

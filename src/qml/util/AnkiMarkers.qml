@@ -61,7 +61,7 @@ QtObject {
         "<p>The current text in the clipboard.</p>"
     )
     readonly property string clozeBodyDesc: qsTr(
-        "<p>The raw expression as recognized by Memento.</p>"
+        "<p>The raw expression as recognized by 白い熊 縁.</p>"
     )
     readonly property string clozePrefixDesc: qsTr(
         "<p>The text before <code>{%1}</code>.</p>"

@@ -43,7 +43,7 @@ DatabaseManager::DatabaseManager(
     {
         qCritical(
             "The version of SQLite on this system is not threadsafe.\n "
-            "Because of this, Memento will not work.\n Please install a "
+            "Because of this, 白い熊 縁 will not work.\n Please install a "
             "version SQLite compiled with SQLITE_THREADSAFE=1 or 2."
         );
         return;

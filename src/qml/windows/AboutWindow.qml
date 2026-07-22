@@ -54,7 +54,7 @@ Window {
         Label {
             Layout.alignment: Qt.AlignHCenter
             textFormat: Text.RichText
-            text: qsTr("<p>Fork of <a href=\"https://github.com/ripose-jp/Memento\">Memento</a></p>")
+            text: qsTr("<p><a href=\"https://github.com/ripose-jp/Memento\">Upstream project</a></p>")
             onLinkActivated: (link) => Qt.openUrlExternally(link)
         }
     }
