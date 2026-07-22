@@ -13,6 +13,14 @@ ApplicationWindow {
     color: "black"
     title: player.state.title ? qsTr("%1 - 白い熊 縁").arg(player.state.title) : qsTr("白い熊 縁")
 
+    /* Fork: Qt's last-window-closed auto-quit does not fire here (the event
+     * loop keeps running and the process has to be ^C-killed), so quit
+     * explicitly — closing the main window ends the application. */
+    onClosing: (close) => {
+        close.accepted = true;
+        Qt.quit();
+    }
+
     /* Handle fullscreen on non-Windows platforms */
     Binding {
         root.visibility: player.state.fullscreen ? Window.FullScreen : Window.Windowed
