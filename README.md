@@ -8,13 +8,15 @@
 
 A fork of [Memento](https://github.com/ripose-jp/Memento) (GPL-2.0) with **major additions**:
 a native Tuxedo OS / Debian `.deb` package, Qt 6.9.2 compatibility fixes the upstream app
-lacks, clean application exit, a quiet launch, and the 白い熊 black-yellow identity.
+lacks, a secondary subtitle that stays up as long as the primary one, a fully stylable
+dictionary popup (fonts, colors, tag colors, background), clean application exit, a quiet
+launch, and the 白い熊 black-yellow identity.
 
 Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards, Anki card
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+8`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+14`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
@@ -37,6 +39,29 @@ across its option pages and aliases it in the Anki note editor — the Qt 6.9.2 
 refuses to load the component tree and **the app never starts**. This fork replaces every
 site with the supported `indexOfValue` sync, with async re-resolution for the Anki
 deck/model lists.
+
+---
+
+## 🕒 Secondary subtitle held until the primary ends
+
+mpv only draws the secondary (e.g. English) line inside its own timing window — with
+pause-at-subtitle-end it routinely vanishes while the Japanese line is still on screen. The
+fork caches the overlapping secondary line and keeps rendering it — with mpv's own
+`sub-*` style (font, colors, border, `mpv.conf` included) — until the primary line it
+overlapped ends. Its top offset is a setting applied to both mpv's renderer and the held
+overlay, and like the primary's bottom offset it is absolute: an offset that clears the
+top toolbar never jumps when the toolbar appears.
+
+---
+
+## 🎨 Style every corner of the dictionary popup
+
+Upstream lets you pick fonts; the fork opens the rest. Every search category — expression,
+reading, conjugation explanation, tags, glossary, kanji — gets a point-size and a text
+color setting, the popup itself gets a background color, and all eleven tag-chip background
+colors (name, expression, popular, frequent, archaism, dictionary, frequency, part of
+speech, search, pitch accent, other) are configurable. Colors default to the theme, so
+nothing changes until you say so.
 
 ---
 
