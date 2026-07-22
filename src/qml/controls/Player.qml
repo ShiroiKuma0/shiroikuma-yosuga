@@ -320,6 +320,75 @@ MpvPlayer {
         onVisibleChanged: updateSeconarySubtitleVisibility()
     }
 
+    /* Fork: sync the secondary subtitle's end with the primary one. mpv only
+     * renders the secondary (e.g. English) line inside its own timing window,
+     * so when it ends before the primary (e.g. Japanese) line — typical with
+     * pause-at-subtitle-end — hovering the top shows nothing. Cache the last
+     * secondary line and render it ourselves while the primary line it
+     * overlapped is still on screen and mpv has nothing to draw. */
+    Text {
+        id: heldSecondarySubtitle
+
+        property string cachedText: ""
+        property real cachedStart: 0
+        property real cachedEnd: 0
+
+        readonly property bool overlapsPrimary:
+            cachedText !== "" &&
+            root.state.subtitle.text !== "" &&
+            cachedStart < root.state.subtitle.endTime &&
+            cachedEnd > root.state.subtitle.startTime
+
+        anchors {
+            horizontalCenter: root.horizontalCenter
+            top: root.top
+            topMargin: root.height * 0.02 +
+                       (!Features.isMacos && menu.visible ? menu.height : 0)
+        }
+        width: Math.min(implicitWidth, root.width * 0.9)
+
+        horizontalAlignment: Text.AlignHCenter
+        wrapMode: Text.Wrap
+        color: "white"
+        style: Text.Outline
+        styleColor: "black"
+        font.family: MementoSettings.interfaceSubtitleFont.family
+        font.pixelSize: root.height * MementoSettings.interfaceSubtitleScale * 0.6
+
+        text: cachedText
+        visible: MementoSettings.behaviorSecondarySubtitleCursorShow &&
+                 itemCursorSecondarySubtitleShow.show &&
+                 root.state.secondarySid !== 0 &&
+                 root.state.secondarySubtitle.text === "" &&
+                 overlapsPrimary &&
+                 !root.ocrMode
+
+        function cacheSubtitle() {
+            const sub = root.state.secondarySubtitle;
+            if (sub.text !== "")
+            {
+                heldSecondarySubtitle.cachedText = sub.text;
+                heldSecondarySubtitle.cachedStart = sub.startTime;
+                heldSecondarySubtitle.cachedEnd = sub.endTime;
+            }
+        }
+
+        function clearCache() {
+            heldSecondarySubtitle.cachedText = "";
+        }
+
+        Connections {
+            target: root.state.secondarySubtitle
+            function onTextChanged() { heldSecondarySubtitle.cacheSubtitle(); }
+        }
+
+        Connections {
+            target: root.state
+            function onPathChanged() { heldSecondarySubtitle.clearCache(); }
+            function onSecondarySidChanged() { heldSecondarySubtitle.clearCache(); }
+        }
+    }
+
     Popup {
         id: definitionPopup
 
