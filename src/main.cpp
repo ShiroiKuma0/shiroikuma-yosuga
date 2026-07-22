@@ -466,7 +466,7 @@ int main(int argc, char *argv[])
 {
     if (showHelpMessage(argc, argv))
     {
-        std::cout << "Usage: memento [options] [url|path]\n"
+        std::cout << "Usage: shiroikuma-yosuga [options] [url|path]\n"
             << "\n"
             << "For more information about commandline arguments, see "
                "https://mpv.io/manual/\n";

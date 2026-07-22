@@ -112,7 +112,8 @@ target_compile_options(memento PRIVATE ${MEMENTO_COMPILER_FLAGS})
 if(MEMENTO_BUNDLE)
     set(MEMENTO_OUTPUT_NAME Memento)
 else()
-    set(MEMENTO_OUTPUT_NAME memento)
+    # Fork: installed binary is shiroikuma-yosuga (target name stays memento)
+    set(MEMENTO_OUTPUT_NAME shiroikuma-yosuga)
 endif()
 set_target_properties(
     memento PROPERTIES

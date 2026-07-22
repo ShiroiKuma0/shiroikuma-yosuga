@@ -93,6 +93,8 @@ Let 白い熊 test. Commit/push only on their explicit **"Push"**. `master` push
 - Never commit/push unprompted; wait for "Push".
 - Keep our changes a **small, legible layer** on top of upstream — rebase (linear), never
   merge upstream into `custom`.
-- Do **not** rename the `memento` binary / internal namespace (only the package name, label,
-  icon and links are ours) — renaming would make every rebase a mass-conflict.
+- The installed binary is `shiroikuma-yosuga` (via `MEMENTO_OUTPUT_NAME` in
+  `src/CMakeLists.txt`), but do **not** rename the CMake target or any internal
+  namespace (`memento` target, `Ripose.Memento` QML module, data dir) — that would make
+  every rebase a mass-conflict.
 - No Claude attribution in commits (see `CLAUDE.md`).

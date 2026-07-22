@@ -36,7 +36,7 @@ if command -v dpkg-shlibdeps >/dev/null 2>&1; then
     (
         cd "$STAGE"
         mkdir -p debian && : > debian/control
-        dpkg-shlibdeps -O usr/bin/memento 2>/dev/null | sed -n 's/^shlibs:Depends=//p'
+        dpkg-shlibdeps -O usr/bin/shiroikuma-yosuga 2>/dev/null | sed -n 's/^shlibs:Depends=//p'
         rm -rf debian
     ) > "$BUILD/deps.txt" || true
     DEPS="$(cat "$BUILD/deps.txt")"

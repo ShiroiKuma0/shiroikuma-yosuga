@@ -20,8 +20,8 @@ Ubuntu / Debian.
 
 ## Fork facts
 
-- **Package**: `shiroikuma-yosuga`, installs `usr/bin/memento` (upstream binary name kept
-  for rebase hygiene); desktop entry **白い熊 縁** with the black-yellow traced crescent icon.
+- **Package**: `shiroikuma-yosuga`, installs `usr/bin/shiroikuma-yosuga`; desktop entry
+  **白い熊 縁** with the black-yellow traced crescent icon.
 - **Versioning**: `<upstream version>+<N>` — the fork build counter `+N` bumps on every
   build and resets on each new upstream version.
 - **Branches**: `master` mirrors [upstream](https://github.com/ripose-jp/Memento) `master`

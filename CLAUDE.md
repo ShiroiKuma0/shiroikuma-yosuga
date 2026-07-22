@@ -25,7 +25,7 @@ Before any work, read **`.claude/skills/build-fork/SKILL.md`** (canonical build)
 | --- | --- | --- |
 | Deb package | `shiroikuma-yosuga` | `_scripts/build-fork.sh` control file |
 | App label | `白い熊 縁` | `res/memento.desktop` `Name` (+ window/about titles in the rebrand layer) |
-| Binary / internal namespace | `memento` (**unchanged** from upstream — never rename) | CMake target |
+| Installed binary | `shiroikuma-yosuga` via `MEMENTO_OUTPUT_NAME` (CMake **target** stays `memento` — never rename the target or internal namespaces) | `src/CMakeLists.txt` |
 | Version | `<upstream CMakeLists.txt VERSION>+<N>` | `fork.properties` → `BUILD_NUMBER` (bumped every build; reset to 1 on a new upstream VERSION) |
 | Icon | black-yellow traced crescent (black fill, yellow `#FFFF00` edge-trace on black) | `res/memento.svg` (installed icon), `res/memento.ico`/`.icns` masters |
 | Branding / links | our name + `https://github.com/ShiroiKuma0/shiroikuma-yosuga` everywhere upstream's name/links appear (README, Help/About, update checks) | rebrand commits on `custom` |
@@ -52,8 +52,10 @@ _scripts/build-fork.sh    # canonical: release .deb → ~/tmp + BUILD_NUMBER bum
   the Qt window (`src/player/`). Dictionary machinery in `src/dict/` (Yomichan-style zip
   dictionaries, sqlite-backed), Anki Connect in `src/anki/`, subtitle handling in
   `src/subtitle/`.
-- Installed files (UNIX): `usr/bin/memento`, `usr/share/memento/translations/`,
-  `usr/share/applications/memento.desktop`,
+- Installed files (UNIX): `usr/bin/shiroikuma-yosuga`, `usr/share/memento/translations/`
+  (data dir keeps the upstream name — the binary resolves it via
+  `appDir/../share/memento/translations`), `usr/share/applications/memento.desktop`
+  (`Name=白い熊 縁`, `Exec=shiroikuma-yosuga`),
   `usr/share/icons/hicolor/scalable/apps/memento.svg`.
 
 ## Hard rules
