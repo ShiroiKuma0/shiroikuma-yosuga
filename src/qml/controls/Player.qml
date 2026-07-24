@@ -202,15 +202,6 @@ MpvPlayer {
             root.focus = false;
             root.forceActiveFocus();
 
-            /* While a held OCR frame is displayed, the first click only
-             * dismisses the popup — the frozen subtitle stays on screen for
-             * further scans. A later click (or any key) moves on. */
-            if (OcrController.heldFrameUrl !== "" && definitionPopup.visible)
-            {
-                definitionPopup.clearResults();
-                event.accepted = false;
-                return;
-            }
             definitionPopup.clearResults();
             OcrController.releaseFrame();
             root.controller.sendMouseButton(event.x, event.y, event.button, true);

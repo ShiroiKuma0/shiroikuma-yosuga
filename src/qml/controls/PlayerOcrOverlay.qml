@@ -102,7 +102,11 @@ Item {
         resetSelection();
         if (rect.width < 2 || rect.height < 2)
         {
-            root.cancel();
+            /* A bare click: leave OCR mode (dismissing any popup via the
+             * mode-entry OSC hide) but keep the held frame for rescans */
+            root.active = false;
+            root.modeChanged(false);
+            root.restoreOscRequested();
             return;
         }
 
@@ -175,7 +179,9 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        enabled: root.active
+        /* Stay interactive while a frame is held so a drag starts the next
+         * selection without another Start OCR */
+        enabled: root.active || OcrController.heldFrameUrl !== ""
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: Qt.CrossCursor
 
@@ -185,6 +191,15 @@ Item {
                 root.cancel();
                 event.accepted = true;
                 return;
+            }
+            /* A press over the held frame re-enters OCR mode */
+            if (!root.active)
+            {
+                root.start();
+                if (!root.active)
+                {
+                    return;
+                }
             }
             root.startPoint = Qt.point(event.x, event.y);
             root.endPoint = Qt.point(event.x, event.y);
