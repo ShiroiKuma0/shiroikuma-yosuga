@@ -17,7 +17,7 @@ Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards,
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+29`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+30`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
@@ -37,7 +37,8 @@ Upstream ships no Linux binary package. This fork builds a proper `shiroikuma-yo
 
 Bitmap subtitle tracks (Blu-ray PGS, DVD) have no text to hover over — this fork reads them
 with [MangaOCR](https://github.com/kha-white/manga-ocr), the best freely available Japanese
-OCR, compiled in and GPU-accelerated. **Ctrl+L freezes the frame exactly as displayed**
+OCR, compiled in and GPU-accelerated. **Ctrl+L — or the mouse forward button — freezes the
+frame exactly as displayed**
 (video, mpv subtitles, and the fork's own subtitle overlays — a window grab, not an mpv
 re-render that drops the line at a pause boundary), you drag a box around the text, and the
 recognition opens the regular **definition popup right above your selection**. The frozen
