@@ -113,8 +113,9 @@ static bool makeDirectoryStructure()
  * @brief Register all types for use in QML.
  *
  * @param context The application context.
+ * @param ocrController The application OCR controller.
  */
-static void registerQmlTypes(Context &context)
+static void registerQmlTypes(Context &context, OcrController *ocrController)
 {
     /* QCoro Types */
 
@@ -183,8 +184,7 @@ static void registerQmlTypes(Context &context)
     /* OCR Types */
 
     qmlRegisterSingletonInstance<OcrController>(
-        MEMENTO_URI, 1, 0, "OcrController",
-        new OcrController(context.settings(), &context)
+        MEMENTO_URI, 1, 0, "OcrController", ocrController
     );
 
     /* Player Types */
@@ -276,10 +276,14 @@ static void registerQmlTypes(Context &context)
  * @brief Register all image providers with the QML application engine.
  *
  * @param engine The QML application engine.
+ * @param ocrController The application OCR controller.
  */
-static void registerImageProviders(QQmlApplicationEngine &engine)
+static void registerImageProviders(
+    QQmlApplicationEngine &engine,
+    OcrController *ocrController)
 {
     engine.addImageProvider("colored-image", new ColoredImageProvider);
+    engine.addImageProvider("ocrframe", new OcrFrameImageProvider(ocrController));
 }
 
 /**
@@ -452,8 +456,9 @@ static int runApplication()
 
     DictionarySearchController::createInstance(context.settings());
 
-    registerQmlTypes(context);
-    registerImageProviders(engine);
+    auto *ocrController = new OcrController(context.settings(), &context);
+    registerQmlTypes(context, ocrController);
+    registerImageProviders(engine, ocrController);
 
     MainManager mainManager(&engine, &context, &engine);
 

@@ -21,10 +21,12 @@ Item {
     signal modeChanged(bool enabled)
     signal restoreOscRequested()
     signal showTextRequested(string text)
-    signal textRecognized(string text)
+    signal textRecognized(string text, rect selection)
 
     anchors.fill: parent
-    visible: root.active
+    /* Stay visible while a frame is held so the frozen frame keeps covering
+     * the live video until the user moves on */
+    visible: root.active || OcrController.heldFrameUrl !== ""
     z: 100
     focus: root.active
 
@@ -54,6 +56,13 @@ Item {
         }
 
         player.forceActiveFocus();
+        /* Freeze the frame so the selection matches what is captured and
+         * repeated scans of the same subtitle stay possible even if mpv
+         * scripts seek or unpause the player underneath. A frame held from
+         * a previous scan is reused. */
+        player.controller.pause();
+        OcrController.warmup();
+        OcrController.holdFrame(player);
         root.hideOscRequested();
         root.active = true;
         root.modeChanged(true);
@@ -68,6 +77,7 @@ Item {
         root.modeChanged(false);
         invalidateRequest();
         resetSelection();
+        OcrController.releaseFrame();
         root.restoreOscRequested();
     }
 
@@ -110,7 +120,7 @@ Item {
                 root.running = false;
                 if (result.text)
                 {
-                    root.textRecognized(result.text);
+                    root.textRecognized(result.text, rect);
                 }
                 else if (result.error)
                 {
@@ -118,6 +128,38 @@ Item {
                 }
                 root.restoreOscRequested();
             });
+    }
+
+    /* The frozen frame captured at OCR start. Drawn over the live video so
+     * the subtitle stays on screen for the whole selection. */
+    Image {
+        anchors.fill: parent
+        fillMode: Image.PreserveAspectFit
+        source: OcrController.heldFrameUrl
+        cache: false
+        visible: OcrController.heldFrameUrl !== ""
+    }
+
+    /* Keep the player paused while selecting; mpv scripts may unpause it. */
+    Connections {
+        target: root.player.state
+        enabled: root.active
+        function onPauseChanged() {
+            if (!root.player.state.pause)
+            {
+                root.player.controller.pause();
+            }
+        }
+    }
+
+    /* A new file makes the held frame stale. Other release points are user
+     * input in Player.qml — mpv scripts seeking or unpausing must not
+     * release the frame, or rescanning the same subtitle breaks. */
+    Connections {
+        target: root.player.state
+        function onPathChanged() {
+            OcrController.releaseFrame();
+        }
     }
 
     Rectangle {

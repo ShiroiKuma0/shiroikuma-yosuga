@@ -20,7 +20,10 @@
 
 #include "ocr/ocrcontroller.h"
 
+#include <QDir>
 #include <QImage>
+#include <QQuickItem>
+#include <QQuickWindow>
 #include <QRect>
 #include <QSizeF>
 #include <QVariantMap>
@@ -49,7 +52,9 @@ OcrController::OcrController(Settings *settings, QObject *parent) :
     QObject(parent),
     m_settings(settings)
 {
-
+#ifdef MEMENTO_OCR_SUPPORT
+    setOfflineModeIfCached();
+#endif // MEMENTO_OCR_SUPPORT
 }
 
 OcrController::~OcrController()
@@ -112,7 +117,11 @@ QCoro::Task<QVariantMap> OcrController::readRegionAsync(
         co_return result;
     }
 
-    QImage screenshot = controller->screenshotRaw(true);
+    QImage screenshot = heldFrame();
+    if (screenshot.isNull())
+    {
+        screenshot = controller->screenshotRaw(true);
+    }
     if (screenshot.isNull())
     {
         result[KEY_ERROR] = tr("Could not capture a video frame.");
@@ -168,7 +177,157 @@ QCoro::Task<QVariantMap> OcrController::readRegionAsync(
 #endif // MEMENTO_OCR_SUPPORT
 }
 
+bool OcrController::holdFrame(QQuickItem *player)
+{
+    QMutexLocker locker(&m_heldFrameLock);
+    if (!m_heldFrame.isNull())
+    {
+        return true;
+    }
+    if (player == nullptr || player->window() == nullptr)
+    {
+        return false;
+    }
+
+    QQuickWindow *window = player->window();
+    const QImage grab = window->grabWindow();
+    if (grab.isNull() || window->width() <= 0)
+    {
+        return false;
+    }
+
+    /* grabWindow() returns device pixels; the item rect is logical */
+    const qreal scale =
+        static_cast<qreal>(grab.width()) / static_cast<qreal>(window->width());
+    const QRectF sceneRect = player->mapRectToScene(
+        QRectF(0, 0, player->width(), player->height())
+    );
+    const QRect cropRect = QRectF(
+        sceneRect.x() * scale,
+        sceneRect.y() * scale,
+        sceneRect.width() * scale,
+        sceneRect.height() * scale
+    ).toRect().intersected(grab.rect());
+    if (cropRect.width() <= 0 || cropRect.height() <= 0)
+    {
+        return false;
+    }
+
+    m_heldFrame = grab.copy(cropRect);
+    ++m_heldFrameId;
+    locker.unlock();
+    emit heldFrameChanged();
+    return true;
+}
+
+void OcrController::releaseFrame()
+{
+    {
+        QMutexLocker locker(&m_heldFrameLock);
+        if (m_heldFrame.isNull())
+        {
+            return;
+        }
+        m_heldFrame = QImage();
+    }
+    emit heldFrameChanged();
+}
+
+void OcrController::warmup()
+{
 #ifdef MEMENTO_OCR_SUPPORT
+    if (m_settings && m_settings->ocrEnabled())
+    {
+        model();
+    }
+#endif // MEMENTO_OCR_SUPPORT
+}
+
+QString OcrController::heldFrameUrl() const
+{
+    QMutexLocker locker(&m_heldFrameLock);
+    if (m_heldFrame.isNull())
+    {
+        return {};
+    }
+    return QStringLiteral("image://ocrframe/%1").arg(m_heldFrameId);
+}
+
+QImage OcrController::heldFrame() const
+{
+    QMutexLocker locker(&m_heldFrameLock);
+    return m_heldFrame;
+}
+
+OcrFrameImageProvider::OcrFrameImageProvider(OcrController *controller) :
+    QQuickImageProvider(QQuickImageProvider::Image),
+    m_controller(controller)
+{
+
+}
+
+QImage OcrFrameImageProvider::requestImage(
+    const QString &id,
+    QSize *size,
+    const QSize &requestedSize)
+{
+    Q_UNUSED(id)
+    Q_UNUSED(requestedSize)
+
+    QImage image = m_controller->heldFrame();
+    if (size)
+    {
+        *size = image.size();
+    }
+    return image;
+}
+
+#ifdef MEMENTO_OCR_SUPPORT
+void OcrController::setOfflineModeIfCached() const
+{
+    if (qEnvironmentVariableIsSet("HF_HUB_OFFLINE") ||
+        qEnvironmentVariableIsSet("TRANSFORMERS_OFFLINE"))
+    {
+        return;
+    }
+
+    /* Mirror huggingface_hub's cache directory resolution */
+    QString cacheRoot = qEnvironmentVariable("HF_HUB_CACHE");
+    if (cacheRoot.isEmpty())
+    {
+        QString hfHome = qEnvironmentVariable("HF_HOME");
+        if (hfHome.isEmpty())
+        {
+            QString xdgCache = qEnvironmentVariable("XDG_CACHE_HOME");
+            if (xdgCache.isEmpty())
+            {
+                xdgCache = QDir::homePath() + "/.cache";
+            }
+            hfHome = xdgCache + "/huggingface";
+        }
+        cacheRoot = hfHome + "/hub";
+    }
+
+    if (m_settings == nullptr)
+    {
+        return;
+    }
+    QString model = m_settings->ocrModel();
+    if (model.isEmpty())
+    {
+        return;
+    }
+
+    const QDir snapshots(
+        cacheRoot + "/models--" + model.replace('/', "--") + "/snapshots"
+    );
+    if (snapshots.exists() &&
+        !snapshots.entryList(QDir::Dirs | QDir::NoDotAndDotDot).isEmpty())
+    {
+        qputenv("HF_HUB_OFFLINE", "1");
+    }
+}
+
 OcrModel *OcrController::model()
 {
     const QString modelName = m_settings->ocrModel();

@@ -128,6 +128,12 @@ MpvPlayer {
             event.accepted = true;
             return;
         }
+        /* Direct player input means the user is done with any held OCR
+         * frame */
+        if (!root.ocrMode)
+        {
+            OcrController.releaseFrame();
+        }
         root.controller.sendKeyPress(event.key, event.modifiers);
     }
 
@@ -196,7 +202,17 @@ MpvPlayer {
             root.focus = false;
             root.forceActiveFocus();
 
+            /* While a held OCR frame is displayed, the first click only
+             * dismisses the popup — the frozen subtitle stays on screen for
+             * further scans. A later click (or any key) moves on. */
+            if (OcrController.heldFrameUrl !== "" && definitionPopup.visible)
+            {
+                definitionPopup.clearResults();
+                event.accepted = false;
+                return;
+            }
             definitionPopup.clearResults();
+            OcrController.releaseFrame();
             root.controller.sendMouseButton(event.x, event.y, event.button, true);
             event.accepted = false;
         }
@@ -484,6 +500,11 @@ MpvPlayer {
 
         property point cursorAtSearch: Qt.point(0, 0)
         property int lastHoverIndex: -1
+        /* True when the current results came from OCR rather than the
+         * subtitle line; anchors the popup at the OCR selection instead */
+        property bool ocrSearch: false
+        /* The OCR selection rect the popup is anchored to */
+        property rect ocrSelection: Qt.rect(0, 0, 0, 0)
 
         readonly property int playerWidth: root.width
         readonly property int playerHeight: root.height
@@ -499,6 +520,18 @@ MpvPlayer {
             return idealPosition;
         }
         y: {
+            if (ocrSearch)
+            {
+                /* Above the selection so the scanned text stays readable;
+                 * below it only when there is no room */
+                let idealPosition = ocrSelection.y - height - 8;
+                if (idealPosition < 0)
+                {
+                    idealPosition = ocrSelection.y + ocrSelection.height + 8;
+                }
+                idealPosition = Math.min(idealPosition, root.height - height);
+                return Math.max(idealPosition, 0);
+            }
             let idealPosition = subtitleText.y - height;
             if (idealPosition < 0)
             {
@@ -528,8 +561,20 @@ MpvPlayer {
 
         onPlayerWidthChanged: definitionPopup.clearResults()
         onPlayerHeightChanged: definitionPopup.clearResults()
-        onPausedChanged: definitionPopup.clearResults()
-        onPositionChanged: definitionPopup.clearResults()
+        /* OCR results come from a held frame, so playback noise from mpv
+         * scripts (auto-pause, sub skipping) must not clear them */
+        onPausedChanged: {
+            if (!definitionPopup.ocrSearch)
+            {
+                definitionPopup.clearResults();
+            }
+        }
+        onPositionChanged: {
+            if (!definitionPopup.ocrSearch)
+            {
+                definitionPopup.clearResults();
+            }
+        }
 
         Rectangle {
             id: dictionaryBorderRectangle
@@ -548,8 +593,9 @@ MpvPlayer {
                  * Selects the longest cloze match or clears the selection on clear.
                  */
                 function updateSelection() {
-                    if (dictionarySearch.terms.length === 0 &&
-                        dictionarySearch.kanji === null)
+                    if (definitionPopup.ocrSearch ||
+                        (dictionarySearch.terms.length === 0 &&
+                         dictionarySearch.kanji === null))
                     {
                         subtitleText.clearSelection();
                         return;
@@ -638,6 +684,7 @@ MpvPlayer {
                 return;
             }
 
+            definitionPopup.ocrSearch = false;
             definitionPopup.cursorAtSearch = root.cursorPosition;
             definitionPage.resetStack();
 
@@ -645,6 +692,28 @@ MpvPlayer {
             const query = text.substring(index);
             dictionarySearch.searchTerms(query, text, index);
             dictionarySearch.searchKanji(text.charAt(index), text, index);
+        }
+
+        /**
+         * Executes a search using text recognized by OCR. The popup is
+         * anchored above the OCR selection rather than the subtitle line.
+         * @param text The recognized text to search.
+         * @param selection The OCR selection in player coordinates.
+         */
+        function searchOcrText(text, selection) {
+            if (text.length === 0)
+            {
+                return;
+            }
+
+            definitionPopup.ocrSearch = true;
+            definitionPopup.ocrSelection = selection;
+            definitionPopup.cursorAtSearch = Qt.point(
+                selection.x + selection.width / 2, selection.y);
+            definitionPage.resetStack();
+
+            dictionarySearch.searchTerms(text, text, 0);
+            dictionarySearch.searchKanji(text.charAt(0), text, 0);
         }
 
         /**
@@ -898,6 +967,6 @@ MpvPlayer {
             }
         }
         onShowTextRequested: (text) => root.controller.showText(text)
-        onTextRecognized: (text) => root.auxiliarySearchRequested(text)
+        onTextRecognized: (text, selection) => definitionPopup.searchOcrText(text, selection)
     }
 }
