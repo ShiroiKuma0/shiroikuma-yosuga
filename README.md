@@ -7,16 +7,17 @@
 **An mpv-based video player for studying Japanese.**
 
 A fork of [Memento](https://github.com/ripose-jp/Memento) (GPL-2.0) with **major additions**:
-a native Tuxedo OS / Debian `.deb` package, Qt 6.9.2 compatibility fixes the upstream app
-lacks, a secondary subtitle that stays up as long as the primary one, a fully stylable
-dictionary popup (fonts, colors, tag colors, background), clean application exit, a quiet
-launch, and the 白い熊 black-yellow identity.
+built-in MangaOCR subtitle scanning on a frozen frame with popup lookup, a native Tuxedo OS /
+Debian `.deb` package, Qt 6.9.2 compatibility fixes the upstream app lacks, a secondary
+subtitle that stays up as long as the primary one, a fully stylable dictionary popup (fonts,
+colors, tag colors, background), clean application exit, a quiet launch, and the 白い熊
+black-yellow identity.
 
 Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards, Anki card
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+16`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+28`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
@@ -29,6 +30,21 @@ Upstream ships no Linux binary package. This fork builds a proper `shiroikuma-yo
 `dpkg-shlibdeps` plus the QML modules the engine loads at runtime, so
 `sudo apt install ./shiroikuma-yosuga_<ver>_amd64.deb` just works. The binary installs as
 `/usr/bin/shiroikuma-yosuga`.
+
+---
+
+## 🔍 Scan any subtitle with MangaOCR — even bitmap tracks
+
+Bitmap subtitle tracks (Blu-ray PGS, DVD) have no text to hover over — this fork reads them
+with [MangaOCR](https://github.com/kha-white/manga-ocr), the best freely available Japanese
+OCR, compiled in and GPU-accelerated. **Ctrl+L freezes the frame exactly as displayed**
+(video, mpv subtitles, and the fork's own subtitle overlays — a window grab, not an mpv
+re-render that drops the line at a pause boundary), you drag a box around the text, and the
+recognition opens the regular **definition popup right above your selection**. The frozen
+frame survives auto-pause and sub-skip mpv scripts seeking or unpausing underneath: dismiss
+the popup and the line is still there for the next scan; a key press or second click moves
+on. The model warms up the moment you enter OCR mode, and once cached it loads fully
+offline (`HF_HUB_OFFLINE`) — no Hugging Face pings.
 
 ---
 
@@ -99,5 +115,9 @@ _scripts/build-fork.sh   # → ~/tmp/shiroikuma-yosuga_<ver>_amd64.deb
 ```
 
 Toolchain: Qt 6.9+ (base, svg, declarative + private headers, tools), libmpv, json-c,
-libzip, sqlite3, CMake + Ninja, dpkg-dev. QCoro is fetched automatically by CMake at
-configure time.
+libzip, sqlite3, python3-dev, CMake + Ninja, dpkg-dev. QCoro and libmocr are fetched
+automatically by CMake at configure time.
+
+OCR needs the [`manga-ocr`](https://pypi.org/project/manga-ocr/) Python package at runtime
+(`pip3 install --user --break-system-packages manga-ocr`); the first recognition downloads
+the `kha-white/manga-ocr-base` model, after which everything runs offline.
