@@ -202,6 +202,14 @@ MpvPlayer {
             root.focus = false;
             root.forceActiveFocus();
 
+            /* Fork: the mouse forward button (BTN_EXTRA) starts OCR */
+            if (event.button === Qt.ForwardButton)
+            {
+                root.startOcrMode();
+                event.accepted = true;
+                return;
+            }
+
             definitionPopup.clearResults();
             OcrController.releaseFrame();
             root.controller.sendMouseButton(event.x, event.y, event.button, true);
