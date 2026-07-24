@@ -17,7 +17,7 @@ Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards,
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+28`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+29`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
@@ -42,9 +42,10 @@ OCR, compiled in and GPU-accelerated. **Ctrl+L freezes the frame exactly as disp
 re-render that drops the line at a pause boundary), you drag a box around the text, and the
 recognition opens the regular **definition popup right above your selection**. The frozen
 frame survives auto-pause and sub-skip mpv scripts seeking or unpausing underneath: dismiss
-the popup and the line is still there for the next scan; a key press or second click moves
-on. The model warms up the moment you enter OCR mode, and once cached it loads fully
-offline (`HF_HUB_OFFLINE`) — no Hugging Face pings.
+the popup with a click and the line is still there — **drag again to scan the next word
+directly**, no re-entering OCR mode; a key press moves on. The model warms up the moment
+you enter OCR mode, and once cached it loads fully offline (`HF_HUB_OFFLINE`) — no Hugging
+Face pings.
 
 ---
 
