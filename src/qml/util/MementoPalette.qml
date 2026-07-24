@@ -45,28 +45,7 @@ QtObject {
     readonly property color window: systemPalette.window
     readonly property color windowText: systemPalette.windowText
 
-    readonly property color border: {
-        if (Features.isUnix)
-        {
-            if (Qt.styleHints.colorScheme === Qt.ColorScheme.Dark)
-            {
-                return systemPalette.light;
-            }
-            else
-            {
-                return systemPalette.mid;
-            }
-        }
-        else
-        {
-            if (Qt.styleHints.colorScheme === Qt.ColorScheme.Dark)
-            {
-                return "#323232";
-            }
-            else
-            {
-                return "#E5E5E5";
-            }
-        }
-    }
+    /* Fork: yellow border lining and separators per the 白い熊 縁
+     * black-yellow branding */
+    readonly property color border: "#FFFF00"
 }
