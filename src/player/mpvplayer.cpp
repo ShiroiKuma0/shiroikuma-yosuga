@@ -771,6 +771,19 @@ void MpvPlayer::handleMpvEvent(mpv_event *event)
             path = QString::fromUtf8(rawPath);
             ::mpv_free(rawPath);
         }
+        /* Fork: same for the track list. The observed track-list/count is
+         * only delivered after the regular events, and not at all when the
+         * new file has as many tracks as the last one, so the fileLoaded
+         * consumers that pick tracks would otherwise see a stale list. */
+        if (state() != nullptr)
+        {
+            mpv_node node;
+            if (::mpv_get_property(m_mpv, "track-list", MPV_FORMAT_NODE, &node) >= 0)
+            {
+                state()->setTracks(&node);
+                ::mpv_free_node_contents(&node);
+            }
+        }
         emit fileLoaded(w, h, path);
         break;
     }

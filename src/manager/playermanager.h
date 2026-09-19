@@ -43,6 +43,13 @@ public:
 
 private slots:
     /**
+     * @brief Fork: selects the first English subtitle track as the secondary
+     * subtitle whenever a file is loaded. mpv has no secondary-slang, so its
+     * own selection never picks a secondary track.
+     */
+    void selectDefaultSecondarySubtitle();
+
+    /**
      * @brief Resets auto pause state.
      */
     void resetAutoPause();

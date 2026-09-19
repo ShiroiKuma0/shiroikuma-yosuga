@@ -20,6 +20,8 @@
 
 #include "manager/playermanager.h"
 
+#include <QRegularExpression>
+
 #include "player/mpvplayer.h"
 #include "state/context.h"
 
@@ -35,6 +37,11 @@ PlayerManager::PlayerManager(Context *context, QObject *parent) :
     connect(
         m_context->player(), &MpvPlayer::fileLoaded,
         this, &PlayerManager::resetAutoPause,
+        Qt::QueuedConnection
+    );
+    connect(
+        m_context->player(), &MpvPlayer::fileLoaded,
+        this, &PlayerManager::selectDefaultSecondarySubtitle,
         Qt::QueuedConnection
     );
     connect(
@@ -57,6 +64,51 @@ PlayerManager::PlayerManager(Context *context, QObject *parent) :
 PlayerManager::~PlayerManager()
 {
 
+}
+
+/**
+ * @brief Whether a track is an English one.
+ *
+ * Goes by the language tag (en, eng, en-US, ...). Tracks that carry no tag
+ * (or an undetermined one) often have the language in the title instead,
+ * either as the bare code ("en") or the name ("English"), so fall back to
+ * that.
+ *
+ * @param track The track to check.
+ * @return true if the track is English, false otherwise.
+ */
+static bool isEnglishTrack(const MpvTrack *track)
+{
+    static const QRegularExpression englishCode(
+        "^eng?([-_].*)?$", QRegularExpression::CaseInsensitiveOption
+    );
+    const QString &lang = track->language();
+    if (!lang.isEmpty() && lang.compare("und", Qt::CaseInsensitive) != 0)
+    {
+        return englishCode.match(lang).hasMatch();
+    }
+    const QString title = track->title().trimmed();
+    return englishCode.match(title).hasMatch() ||
+        title.contains("english", Qt::CaseInsensitive);
+}
+
+void PlayerManager::selectDefaultSecondarySubtitle()
+{
+    MpvState *state = m_context->player()->state();
+    for (const MpvTrack *track : state->subtitleTracks())
+    {
+        if (!isEnglishTrack(track))
+        {
+            continue;
+        }
+        /* mpv refuses to select one track twice; leave a file whose only
+         * English track is already the primary subtitle alone. */
+        if (track->id() != state->sid())
+        {
+            m_context->player()->controller()->setSecondarySid(track->id());
+        }
+        return;
+    }
 }
 
 void PlayerManager::resetAutoPause()
