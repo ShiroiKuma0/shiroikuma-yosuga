@@ -8,16 +8,16 @@
 
 A fork of [Memento](https://github.com/ripose-jp/Memento) (GPL-2.0) with **major additions**:
 built-in MangaOCR subtitle scanning on a frozen frame with popup lookup, a native Tuxedo OS /
-Debian `.deb` package, Qt 6.9.2 compatibility fixes the upstream app lacks, a secondary
-subtitle that stays up as long as the primary one, a fully stylable dictionary popup (fonts,
-colors, tag colors, background), clean application exit, a quiet launch, and the 白い熊
-black-yellow identity.
+Debian `.deb` package, Qt 6.9.2 compatibility fixes the upstream app lacks, the first English
+track auto-selected as the second subtitle, a secondary subtitle that stays up as long as the
+primary one, a fully stylable dictionary popup (fonts, colors, tag colors, background), clean
+application exit, a quiet launch, and the 白い熊 black-yellow identity.
 
 Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards, Anki card
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+30`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+032`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
@@ -60,7 +60,12 @@ deck/model lists.
 
 ---
 
-## 🕒 Secondary subtitle held until the primary ends
+## 🕒 English second track by default, held until the primary ends
+
+mpv's `slang` picks the primary subtitle only — the second track always started at *None*.
+The fork selects the **first English subtitle track as the second track on every file load**
+(by language tag, or by a bare `en` / “English” title when the track carries none), so
+`slang=jpn` plus this gives Japanese below, English above, without touching the menu.
 
 mpv only draws the secondary (e.g. English) line inside its own timing window — with
 pause-at-subtitle-end it routinely vanishes while the Japanese line is still on screen. The
