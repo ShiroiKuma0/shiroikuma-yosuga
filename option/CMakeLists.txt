@@ -5,6 +5,7 @@ set(MEMENTO_CODESIGN_KEYCHAIN "" CACHE FILEPATH "macOS keychain containing the c
 
 # Release Options
 option(MEMENTO_RELEASE_BUILD "Toggle to build with release settings" OFF)
+set(MEMENTO_BUILD_NUMBER "" CACHE STRING "Fork build counter, shown as +NNN after the version (empty for a plain build)")
 
 # Debugging
 option(MEMENTO_WERROR "Use -Werror when compiling" OFF)

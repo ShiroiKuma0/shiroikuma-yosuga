@@ -26,7 +26,7 @@ Before any work, read **`.claude/skills/build-fork/SKILL.md`** (canonical build)
 | Deb package | `shiroikuma-yosuga` | `_scripts/build-fork.sh` control file |
 | App label | `白い熊 縁` | `res/memento.desktop` `Name` (+ window/about titles in the rebrand layer) |
 | Installed binary | `shiroikuma-yosuga` via `MEMENTO_OUTPUT_NAME` (CMake **target** stays `memento` — never rename the target or internal namespaces) | `src/CMakeLists.txt` |
-| Version | `<upstream CMakeLists.txt VERSION>+<N>` | `fork.properties` → `BUILD_NUMBER` (bumped every build; reset to 1 on a new upstream VERSION) |
+| Version | `<upstream CMakeLists.txt VERSION>+<NNN>` — counter zero-padded to three digits (`2.0.2+032`) in the deb version, file name, release tag and About page | `fork.properties` → `BUILD_NUMBER` (plain integer; bumped every build; reset to 1 on a new upstream VERSION). The script pads it and passes it as `-DMEMENTO_BUILD_NUMBER` → `Features.buildNumber` |
 | Icon | black-yellow traced crescent (black fill, yellow `#FFFF00` edge-trace on black) | `res/memento.svg` (installed icon), `res/memento.ico`/`.icns` masters |
 | Branding / links | our name + `https://github.com/ShiroiKuma0/shiroikuma-yosuga` everywhere upstream's name/links appear (README, Help/About, update checks) | rebrand commits on `custom` |
 | Keystore | `~/.android-keystores/shiroikuma-yosuga.jks`, alias `yosuga` (recorded in the 暗号 org file; NOT used by the deb pipeline — reserved for release signing / any future Android build) | — |

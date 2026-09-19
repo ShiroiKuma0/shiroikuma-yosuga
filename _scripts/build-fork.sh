@@ -2,7 +2,7 @@
 # Canonical fork build for shiroikuma-yosuga (白い熊 縁, Memento fork).
 # Builds the GNU/Linux amd64 .deb into ~/tmp/ and bumps BUILD_NUMBER.
 #
-# Output: ~/tmp/shiroikuma-yosuga_<upstream CMake VERSION>+<BUILD_NUMBER>_amd64.deb
+# Output: ~/tmp/shiroikuma-yosuga_<upstream CMake VERSION>+<BUILD_NUMBER, zero-padded to 3>_amd64.deb
 set -euo pipefail
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
@@ -12,7 +12,10 @@ PKG=shiroikuma-yosuga
 VER="$(sed -nE 's/^ *VERSION +([0-9.]+).*/\1/p' CMakeLists.txt | head -1)"
 N="$(sed -nE 's/^BUILD_NUMBER=([0-9]+)$/\1/p' fork.properties)"
 [[ -n "$VER" && -n "$N" ]] || { echo "ERROR: version or BUILD_NUMBER not found" >&2; exit 1; }
-FORKVER="${VER}+${N}"
+# Counter is zero-padded to three digits (+032) so file lists sort in build order;
+# fork.properties keeps the plain integer (a padded one would read as octal below).
+NPAD="$(printf '%03d' "$N")"
+FORKVER="${VER}+${NPAD}"
 OUT="$HOME/tmp/${PKG}_${FORKVER}_amd64.deb"
 
 BUILD=build/fork
@@ -24,6 +27,7 @@ cmake -S . -B "$BUILD" -G Ninja \
     -DMEMENTO_RELEASE_BUILD=ON \
     -DMEMENTO_QAPPLICATION=ON \
     -DMEMENTO_OCR_SUPPORT=ON \
+    -DMEMENTO_BUILD_NUMBER="$NPAD" \
     -DCMAKE_INSTALL_PREFIX=/usr
 cmake --build "$BUILD" -j"$(nproc)"
 

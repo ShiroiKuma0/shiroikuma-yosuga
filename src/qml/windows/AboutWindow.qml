@@ -33,10 +33,19 @@ Window {
 
         Label {
             Layout.alignment: Qt.AlignHCenter
-            text: qsTr("Version %1").arg(
-                      Features.versionHash.length > 0 ?
-                          `${Features.version}-${Features.versionHash}` :
-                          `${Features.version}`)
+            text: {
+                /* Fork: the full <upstream>+<build> version, e.g. 2.0.2+032 */
+                let version = Features.version;
+                if (Features.buildNumber.length > 0)
+                {
+                    version += `+${Features.buildNumber}`;
+                }
+                if (Features.versionHash.length > 0)
+                {
+                    version += `-${Features.versionHash}`;
+                }
+                return qsTr("Version %1").arg(version);
+            }
         }
 
         Label {

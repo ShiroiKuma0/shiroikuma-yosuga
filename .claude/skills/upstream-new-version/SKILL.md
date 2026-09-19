@@ -20,7 +20,7 @@ and produce a fresh `+1` build.
   shiroikuma-jiyudoga rides FreeTube's development tip.)
 - **`custom`** carries all our work, **rebased** onto `master` on each sync (linear history,
   easy to audit with `git log master..custom`).
-- Fork version = `<upstream CMakeLists.txt project VERSION>+<BUILD_NUMBER>`.
+- Fork version = `<upstream CMakeLists.txt project VERSION>+<BUILD_NUMBER zero-padded to 3>` (`2.0.3+001`).
   `BUILD_NUMBER` lives in `fork.properties`; it **resets to 1** whenever the upstream
   `VERSION` changes, and just keeps counting when only upstream commits (same VERSION) land.
 

@@ -36,4 +36,7 @@ namespace Memento
 
     /* Git version hash. Empty if MEMENTO_RELEASE_BUILD=ON. */
     constexpr const char *VERSION_HASH{"@MEMENTO_VERSION_HASH@"};
+
+    /* Fork build counter, zero-padded (e.g. 032). Empty for a plain build. */
+    constexpr const char *BUILD_NUMBER{"@MEMENTO_BUILD_NUMBER@"};
 }

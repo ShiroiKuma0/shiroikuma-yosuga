@@ -60,6 +60,12 @@ class Features : public QObject
     )
 
     Q_PROPERTY(
+        QString buildNumber
+        READ buildNumber
+        CONSTANT
+    )
+
+    Q_PROPERTY(
         bool isWindows
         READ isWindows
         CONSTANT
@@ -157,6 +163,15 @@ public:
      */
     [[nodiscard]]
     QString versionHash() const;
+
+    /**
+     * @brief Get the fork build counter of the software, zero-padded.
+     * Empty unless MEMENTO_BUILD_NUMBER was set at configure time.
+     *
+     * @return The build counter, e.g. "032".
+     */
+    [[nodiscard]]
+    QString buildNumber() const;
 
     /**
      * @brief Get if this is running on Windows.

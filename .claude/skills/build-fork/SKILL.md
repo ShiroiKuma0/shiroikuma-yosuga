@@ -24,7 +24,8 @@ It: configures + compiles (CMake/Ninja, Release, `MEMENTO_RELEASE_BUILD=ON`,
 `MEMENTO_QAPPLICATION=ON`) → stages a DESTDIR install → computes runtime `Depends` via
 `dpkg-shlibdeps` → packages with `dpkg-deb` → **bumps `BUILD_NUMBER`** in `fork.properties`.
 
-Output (`<ver>` = `<upstream CMakeLists.txt VERSION>+<BUILD_NUMBER>`, e.g. `2.0.2+1`):
+Output (`<ver>` = `<upstream CMakeLists.txt VERSION>+<BUILD_NUMBER zero-padded to 3>`, e.g. `2.0.2+032`;
+the same string is baked into the binary via `-DMEMENTO_BUILD_NUMBER` for the About page):
 - `~/tmp/shiroikuma-yosuga_<ver>_amd64.deb`
 
 ## Toolchain (all system packages, already installed)

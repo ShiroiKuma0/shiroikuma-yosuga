@@ -57,6 +57,11 @@ QString Features::versionHash() const
     return Memento::VERSION_HASH;
 }
 
+QString Features::buildNumber() const
+{
+    return Memento::BUILD_NUMBER;
+}
+
 bool Features::isWindows() const noexcept
 {
 #if defined(Q_OS_WIN)
