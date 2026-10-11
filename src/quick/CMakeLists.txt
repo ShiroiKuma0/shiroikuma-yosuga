@@ -78,6 +78,20 @@ if(MEMENTO_MECAB_SUPPORT)
 endif()
 
 add_library(
+    jamishare
+    jamishare.cpp
+    jamishare.h
+)
+target_compile_features(jamishare PRIVATE cxx_std_20)
+target_include_directories(jamishare PRIVATE ${MEMENTO_INCLUDE_DIRS})
+target_compile_options(jamishare PRIVATE ${MEMENTO_COMPILER_FLAGS})
+target_link_libraries(
+    jamishare
+    PRIVATE Qt6::Network
+    PUBLIC Qt6::Core
+)
+
+add_library(
     keytracker
     keytracker.cpp
     keytracker.h

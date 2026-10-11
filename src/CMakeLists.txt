@@ -141,6 +141,7 @@ target_link_libraries(
     PRIVATE anki
     PRIVATE audioplayer
     PRIVATE clipboard
+    PRIVATE jamishare
     PRIVATE coloredimageprovider
     PRIVATE definition
     PRIVATE dictionary

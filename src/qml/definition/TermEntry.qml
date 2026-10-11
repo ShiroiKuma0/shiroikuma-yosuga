@@ -149,6 +149,116 @@ Item {
 
     onTermChanged: root.checkTermAddable()
 
+    /* Fork: plain-text copies of the entry for the copy menu */
+    Clipboard {
+        id: clipboard
+    }
+
+    JamiShare {
+        id: jamiShare
+    }
+
+    /* The distinct texts the copy and share menus offer */
+    function shareTexts() {
+        const texts = [
+            root.expressionText(),
+            root.expressionReadingText(),
+            root.expressionReadingTranslationText()
+        ];
+        return texts.filter((text, index) => texts.indexOf(text) === index);
+    }
+
+    /* Copy the text and bring Jami to the front for pasting */
+    function shareText(text) {
+        clipboard.setText(text);
+        if (!jamiShare.raise())
+        {
+            errorDialog.title = qsTr("Could Not Open Jami");
+            errorLabel.text = qsTr("The jami command could not be started.");
+            errorDialog.open();
+        }
+    }
+
+    /**
+     * Flatten one glossary item (string, text object or structured content)
+     * into plain-text lines, dropping ruby readings and images.
+     */
+    function glossaryLines(node) {
+        const blockTags = ["div", "li", "p", "br", "tr", "ol", "ul", "table"];
+        const walk = function(n) {
+            if (n === null || n === undefined)
+            {
+                return "";
+            }
+            if (typeof n === "string")
+            {
+                return n;
+            }
+            if (Array.isArray(n))
+            {
+                return n.map(walk).join("");
+            }
+            if (n.type === "text")
+            {
+                return n.text ?? "";
+            }
+            if (n.type === "image" || n.tag === "img" ||
+                    n.tag === "rt" || n.tag === "rp")
+            {
+                return "";
+            }
+            const inner = walk(n.content);
+            return blockTags.includes(n.tag) ? "\n" + inner + "\n" : inner;
+        };
+        return walk(node).split("\n")
+            .map(line => line.trim())
+            .filter(line => line.length > 0);
+    }
+
+    /* The glosses of every definition, de-duplicated, joined by "; " */
+    function translationText() {
+        const seen = new Set();
+        const glosses = [];
+        for (const definition of root.term?.definitions ?? [])
+        {
+            for (const item of definition.glossary ?? [])
+            {
+                for (const line of root.glossaryLines(item))
+                {
+                    const key = line.toLowerCase();
+                    if (!seen.has(key))
+                    {
+                        seen.add(key);
+                        glosses.push(line);
+                    }
+                }
+            }
+        }
+        return glosses.join("; ");
+    }
+
+    function expressionText() {
+        return root.term?.expression ?? "";
+    }
+
+    /* 正面衝突【しょうめんしょうとつ】 — just the expression when it is kana-only */
+    function expressionReadingText() {
+        const expression = root.expressionText();
+        const reading = root.term?.reading ?? "";
+        if (reading.length === 0 || reading === expression)
+        {
+            return expression;
+        }
+        return `${expression}【${reading}】`;
+    }
+
+    function expressionReadingTranslationText() {
+        const translation = root.translationText();
+        return translation.length > 0 ?
+            `${root.expressionReadingText()} — ${translation}` :
+            root.expressionReadingText();
+    }
+
     Dialog {
         id: errorDialog
         parent: Overlay.overlay
@@ -249,6 +359,7 @@ Item {
                             }
                             return !root.term.addableExpression || !root.term.addableReading;
                         }
+                        icon.name: "view-list-details"
                         icon.source: Utils.toImageProvider("note-stack", MementoPalette.text)
                         onClicked: AnkiClient.openDuplicates(root.term).then(function(result) {
                             if (result.success)
@@ -273,7 +384,8 @@ Item {
                                  !root.term.ankiAdding &&
                                  root.term.addableExpression &&
                                  root.term.addableReading
-                        icon.source: Utils.toImageProvider(root.term?.readingAsExpression ? "kana" : "kanji", MementoPalette.text)
+                        text: root.term?.readingAsExpression ? "かな" : "漢字"
+                        display: AbstractButton.TextOnly
                         onClicked: {
                             if (root.term)
                             {
@@ -292,7 +404,7 @@ Item {
                         enabled: audioFiles.loadState === AudioFiles.LoadState.Loaded &&
                                  root.term &&
                                  !root.term.ankiAdding
-                        icon.name: MementoSettings.interfaceSystemIcons ? "list-add" : null
+                        icon.name: "list-add"
                         icon.source: Utils.toImageProvider("add", MementoPalette.text)
 
                         onClicked: {
@@ -314,6 +426,7 @@ Item {
                                 delegate: MenuItem {
                                     text: model.name
                                     enabled: model.exists
+                                    icon.name: model.exists ? "audio-volume-high" : "audio-volume-muted"
                                     icon.source: Utils.toImageProvider(model.exists ? "volume-on" : "volume-off", MementoPalette.text)
                                     onTriggered: {
                                         root.term.audioSourceName = model.name;
@@ -324,6 +437,58 @@ Item {
                                 }
                                 onObjectAdded: (index, object) => addAnkiMenu.insertItem(index, object)
                                 onObjectRemoved: (index, object) => addAnkiMenu.removeItem(object)
+                            }
+                        }
+                    }
+
+                    ToolButton {
+                        id: copyButton
+                        focusPolicy: Qt.NoFocus
+                        visible: !!root.term
+                        icon.name: "edit-copy"
+                        ToolTip.visible: hovered
+                        ToolTip.delay: 500
+                        ToolTip.text: qsTr("Copy")
+                        onClicked: copyMenu.popup(copyButton, 0, copyButton.height)
+
+                        Menu {
+                            id: copyMenu
+
+                            Instantiator {
+                                model: root.term ? root.shareTexts() : []
+                                delegate: MenuItem {
+                                    required property string modelData
+                                    text: modelData
+                                    onTriggered: clipboard.setText(modelData)
+                                }
+                                onObjectAdded: (index, object) => copyMenu.insertItem(index, object)
+                                onObjectRemoved: (index, object) => copyMenu.removeItem(object)
+                            }
+                        }
+                    }
+
+                    ToolButton {
+                        id: shareButton
+                        focusPolicy: Qt.NoFocus
+                        visible: !!root.term
+                        icon.name: "document-share"
+                        ToolTip.visible: hovered
+                        ToolTip.delay: 500
+                        ToolTip.text: qsTr("Share via Jami")
+                        onClicked: shareMenu.popup(shareButton, 0, shareButton.height)
+
+                        Menu {
+                            id: shareMenu
+
+                            Instantiator {
+                                model: root.term ? root.shareTexts() : []
+                                delegate: MenuItem {
+                                    required property string modelData
+                                    text: modelData
+                                    onTriggered: root.shareText(modelData)
+                                }
+                                onObjectAdded: (index, object) => shareMenu.insertItem(index, object)
+                                onObjectRemoved: (index, object) => shareMenu.removeItem(object)
                             }
                         }
                     }
@@ -340,14 +505,12 @@ Item {
                                  audioFiles.loadState === AudioFiles.LoadState.Loaded &&
                                  audioFiles.files.count > 0
 
-                        icon.source: {
-                            if (audioFiles.loadState !== AudioFiles.LoadState.Loaded ||
-                                    (audioFiles.files.count > 0 && audioFiles.files.get(0).exists))
-                            {
-                                return Utils.toImageProvider("volume-on", MementoPalette.text);
-                            }
-                            return Utils.toImageProvider("volume-off", MementoPalette.text);
-                        }
+                        readonly property bool audible:
+                            audioFiles.loadState !== AudioFiles.LoadState.Loaded ||
+                            (audioFiles.files.count > 0 && audioFiles.files.get(0).exists)
+
+                        icon.name: audioButton.audible ? "audio-volume-high" : "audio-volume-muted"
+                        icon.source: Utils.toImageProvider(audioButton.audible ? "volume-on" : "volume-off", MementoPalette.text)
 
                         onClicked: {
                             if (!audioFiles.files.get(0).exists)
@@ -377,6 +540,7 @@ Item {
                                 delegate: MenuItem {
                                     text: model.name
                                     enabled: model.exists
+                                    icon.name: model.exists ? "audio-volume-high" : "audio-volume-muted"
                                     icon.source: Utils.toImageProvider(model.exists ? "volume-on" : "volume-off", MementoPalette.text)
                                     onTriggered: {
                                         audioButton.loading = true;

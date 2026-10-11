@@ -60,6 +60,7 @@
 #include "quick/coloredimageprovider.h"
 #include "quick/features.h"
 #include "quick/furiganaparser.h"
+#include "quick/jamishare.h"
 #include "quick/keytracker.h"
 #include "quick/paths.h"
 #include "setting/migration.h"
@@ -244,6 +245,7 @@ static void registerQmlTypes(Context &context, OcrController *ocrController)
     /* Quick Types */
 
     qmlRegisterType<Clipboard>(MEMENTO_URI, 1, 0, "Clipboard");
+    qmlRegisterType<JamiShare>(MEMENTO_URI, 1, 0, "JamiShare");
     qmlRegisterSingletonInstance<Features>(
         MEMENTO_URI, 1, 0, "Features", new Features(&context)
     );
