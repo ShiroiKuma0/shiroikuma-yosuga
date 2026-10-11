@@ -10,14 +10,14 @@ A fork of [Memento](https://github.com/ripose-jp/Memento) (GPL-2.0) with **major
 built-in MangaOCR subtitle scanning on a frozen frame with popup lookup, a native Tuxedo OS /
 Debian `.deb` package, Qt 6.9.2 compatibility fixes the upstream app lacks, the first English
 track auto-selected as the second subtitle, a secondary subtitle that stays up as long as the
-primary one, a fully stylable dictionary popup (fonts, colors, tag colors, background), clean
-application exit, a quiet launch, and the 白い熊 black-yellow identity.
+primary one, a fully stylable dictionary popup (fonts, colors, tag colors, background), one-click
+copy and Jami sharing of dictionary entries, clean application exit, a quiet launch, and the 白い熊 black-yellow identity.
 
 Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards, Anki card
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+032`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+035`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
@@ -85,6 +85,19 @@ color setting, the popup itself gets a background color, and all eleven tag-chip
 colors (name, expression, popular, frequent, archaism, dictionary, frequency, part of
 speech, search, pitch accent, other) are configurable. Colors default to the theme, so
 nothing changes until you say so.
+
+---
+
+## 📋 Copy or share any entry in one click
+
+Every term in the dictionary popup gets a **copy** button with three ready-made plain-text
+forms — the word (`正面衝突`), the word with its reading (`正面衝突【しょうめんしょうとつ】`),
+and both plus the translation (`… — head-on collision`, glosses from every dictionary,
+de-duplicated). A **share** button offers the same three: it copies your pick and brings
+[Jami](https://jami.net) to the front, waking the running instance through its own
+single-instance socket — never a second Jami — so it's pick a chat, paste, send. The
+speaker, Anki and kanji/kana buttons that the KDE desktop style left invisible are visible
+again.
 
 ---
 

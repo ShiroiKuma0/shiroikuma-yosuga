@@ -6,6 +6,14 @@ releases are listed at <https://github.com/ripose-jp/Memento/releases>. Every en
 delta since the previous fork release; each says which upstream release it is built on.
 Release tags carry no `v`; from `2.0.2+032` on, the build counter is zero-padded to three digits.
 
+## 白い熊 縁 2.0.2+035 — 2026-10-11
+
+Built on upstream Memento `v2.0.2`.
+
+- **Fix: invisible buttons in dictionary entries** — the `org.kde.desktop` Quick style the fork keeps draws only themed icon names, so the app's own `image://colored-image` icons came out blank: the speaker (play audio), Anki add, Anki open-duplicates and kanji/kana buttons were present but invisible. They now carry theme icon names (`audio-volume-high`/`audio-volume-muted`, also in the audio-source menus; `list-add` regardless of the system-icons setting; `view-list-details`), and the kanji/kana toggle shows `漢字`/`かな` text.
+- **Copy button on every term entry** (`edit-copy`) — a menu of the entry as plain text, each row showing exactly what it copies: the expression (`正面衝突`); the expression with its reading (`正面衝突【しょうめんしょうとつ】`); and that plus the translation (`正面衝突【しょうめんしょうとつ】 — head-on collision`). The translation is the glosses of every definition, de-duplicated case-insensitively and joined by `; `; structured-content glossaries are flattened to text with ruby readings and images dropped. Rows that would repeat the one above (kana-only words, entries without glosses) are left out.
+- **Share via Jami** (`document-share`) — the same three texts; picking one copies it and brings the desktop Jami client to the front, ready to pick any chat (group chats included) and paste. A running Jami is woken through its own single-instance local socket (named by the SHA-256 of `Jami` + `jami.net`) exactly as a second `jami` launch would wake it, so no second Jami process is ever spawned; `jami` is started only when nothing is listening. An error dialog appears if it cannot be started.
+
 ## 白い熊 縁 2.0.2+032 — 2026-09-19
 
 Built on upstream Memento `v2.0.2`.
