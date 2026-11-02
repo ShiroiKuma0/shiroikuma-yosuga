@@ -10,14 +10,14 @@ A fork of [Memento](https://github.com/ripose-jp/Memento) (GPL-2.0) with **major
 built-in MangaOCR subtitle scanning on a frozen frame with popup lookup, a native Tuxedo OS /
 Debian `.deb` package, Qt 6.9.2 compatibility fixes the upstream app lacks, the first English
 track auto-selected as the second subtitle, a secondary subtitle that stays up as long as the
-primary one, a fully stylable dictionary popup (fonts, colors, tag colors, background), one-click
+primary one, right-click editing of subtitles saved back into the SRT or MKV, a fully stylable dictionary popup (fonts, colors, tag colors, background), one-click
 copy and Jami sharing of dictionary entries, clean application exit, a quiet launch, and the 白い熊 black-yellow identity.
 
 Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards, Anki card
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+035`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+037`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
@@ -74,6 +74,17 @@ fork caches the overlapping secondary line and keeps rendering it — with mpv's
 overlapped ends. Its top offset is a setting applied to both mpv's renderer and the held
 overlay, and like the primary's bottom offset it is absolute: an offset that clears the
 top toolbar never jumps when the toolbar appears.
+
+---
+
+## ✏️ Fix a subtitle where you see it
+
+Right-click the subtitle line to edit it in place — Enter saves, Escape cancels. The correction
+goes straight into the source: an external SRT, VTT or ASS file is rewritten, and a track
+embedded in an MKV is written back with mkvtoolnix into a new file that replaces the original,
+every other track, attachment and chapter untouched. A centred progress dialog follows the
+rewrite, and the file reopens at the same moment with the same tracks selected, the same
+pause state and the same window — the fixed line is simply there.
 
 ---
 

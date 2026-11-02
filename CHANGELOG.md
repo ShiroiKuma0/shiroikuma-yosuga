@@ -6,6 +6,16 @@ releases are listed at <https://github.com/ripose-jp/Memento/releases>. Every en
 delta since the previous fork release; each says which upstream release it is built on.
 Release tags carry no `v`; from `2.0.2+032` on, the build counter is zero-padded to three digits.
 
+## 白い熊 縁 2.0.2+037 — 2026-11-02
+
+Built on upstream Memento `v2.0.2`.
+
+- **Right-click a subtitle to edit it** — right-clicking the subtitle line pauses playback and opens an inline editor over it holding mpv's raw text (before the search regex filter and newline replacement). Enter saves, Shift+Enter breaks the line, Escape or a click elsewhere cancels; player shortcuts are held off while the editor is open. Playback resumes afterwards if it was running.
+- **The edit is saved to the subtitle's source, whole** — every save writes the complete subtitle stream anew. An external `.srt`, `.vtt`, `.ass` or `.ssa` file is rewritten atomically, keeping its encoding, BOM and line endings (files that are not valid UTF-8/UTF-16 are refused rather than risked). A track embedded in a Matroska file (`.mkv`, `.mka`, `.mks`, `.mk3d`, `.webm`) is extracted with `mkvextract`, edited, and muxed back with `mkvmerge` into a hidden `.<name>.yosuga-edit-<id>.<ext>` beside the original — every other track, attachment, chapter and tag carried over, the edited track in its old position with its language, name, default/forced/enabled and accessibility flags — which then replaces the original by a single `rename()`. The free space for that copy is checked first; on any failure the partial file is removed and the original is untouched. The line is found by its start time and whitespace-insensitive text; formatting that wraps the whole line (`{\an8}`, `<i>…</i>`, leading ASS override blocks) is kept. SRT, ASS/SSA and WebVTT tracks are supported and keep their format; image subtitles and embedded tracks of other containers are refused with a message.
+- **The file reloads in place after a save** — mpv reopens the same playlist entry at the same position and pause state; the audio, video, subtitle and Second Track selections are restored by file and track number, hand-added external subtitle files are re-added, and the subtitle list built up for embedded tracks comes back with the edit in it. The window is not refitted and playback does not auto-start during the reload; the playlist is untouched.
+- **Progress dialog for saves** — a centred dialog in the palette colours with the yellow border shows each stage: reading the subtitle track, writing the new file (with the progress mkvtoolnix reports in `--gui-mode`), reloading. Input to the player is held off while it is open; a failed save shows its reason with an OK button. Saves of plain subtitle files finish too quickly to show it.
+- `mkvtoolnix` (`mkvmerge`, `mkvextract`) is needed for editing embedded tracks.
+
 ## 白い熊 縁 2.0.2+035 — 2026-10-11
 
 Built on upstream Memento `v2.0.2`.
