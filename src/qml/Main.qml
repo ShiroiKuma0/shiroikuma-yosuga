@@ -180,8 +180,10 @@ ApplicationWindow {
                 {
                     player.controller.loadFile(files);
                 }
-                else
+                else if (!player.reviewSession.startFromArguments(
+                             Qt.application.arguments))
                 {
+                    /* Fork: --review=… is handled by correction mode */
                     player.controller.loadArgs(Qt.application.arguments);
                 }
             }

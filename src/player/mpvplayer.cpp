@@ -508,6 +508,12 @@ void MpvPlayer::initOptions()
             continue;
         }
 
+        /* Fork: correction mode is Yosuga's own option, not mpv's */
+        if (args[i] == "--review" || args[i].startsWith("--review="))
+        {
+            continue;
+        }
+
         /* Skip per file options */
         if (args[i] == "--{")
         {

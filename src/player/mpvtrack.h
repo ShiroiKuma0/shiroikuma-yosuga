@@ -320,6 +320,18 @@ public:
      */
     void setCodec(QString value);
 
+    /**
+     * @brief Fork: whether the track is flagged for the hearing impaired
+     *        (SDH).
+     */
+    [[nodiscard]]
+    bool hearingImpaired() const noexcept;
+
+    /**
+     * @brief Fork: sets the hearing-impaired flag.
+     */
+    void setHearingImpaired(bool value);
+
 signals:
     /**
      * @brief Emitted when the type is changed.
@@ -442,4 +454,7 @@ private:
 
     /* The codec of the track. Unavailable in some cases. */
     QString m_codec;
+
+    /* Fork: mpv's "hearing-impaired" flag */
+    bool m_hearingImpaired{false};
 };

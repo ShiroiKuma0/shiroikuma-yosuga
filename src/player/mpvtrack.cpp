@@ -204,3 +204,13 @@ void MpvTrack::setCodec(QString value)
     m_codec = std::move(value);
     emit codecChanged(m_language);
 }
+
+bool MpvTrack::hearingImpaired() const noexcept
+{
+    return m_hearingImpaired;
+}
+
+void MpvTrack::setHearingImpaired(bool value)
+{
+    m_hearingImpaired = value;
+}

@@ -43,6 +43,7 @@
 #include <QtConcurrent>
 
 #include "player/mpvplayer.h"
+#include "subtitle/mkvtools.h"
 #include "subtitle/subtitlelistmodel.h"
 
 namespace
@@ -466,101 +467,8 @@ std::optional<Format> formatForSuffix(const QString &suffix)
     return std::nullopt;
 }
 
-bool isMatroska(const QString &path)
-{
-    static const QStringList suffixes{"mkv", "mka", "mks", "mk3d", "webm"};
-    return suffixes.contains(QFileInfo(path).suffix().toLower());
-}
-
-/**
- * Runs a mkvtoolnix tool to completion. Exit code 1 is "warnings only".
- *
- * @param output   If set, receives stdout (used for JSON identification).
- * @param progress If set, the tool runs in --gui-mode and its progress lines
- *                 are reported as 0–1.
- */
-bool runTool(
-    const QString &program,
-    QStringList args,
-    QByteArray *output,
-    QString &error,
-    const std::function<void(double)> &progress = {})
-{
-    if (progress)
-    {
-        args.prepend("--gui-mode");
-    }
-
-    QProcess proc;
-    proc.setProcessChannelMode(
-        output ? QProcess::SeparateChannels : QProcess::MergedChannels);
-    proc.start(program, args);
-    if (!proc.waitForStarted())
-    {
-        error = QObject::tr("%1 is not installed (mkvtoolnix)").arg(program);
-        return false;
-    }
-
-    QByteArray collected;
-    QByteArray pending;
-    QString lastLine;
-    auto consume = [&] (const QByteArray &chunk) {
-        if (output)
-        {
-            collected += chunk;
-            return;
-        }
-        pending += chunk;
-        qsizetype cut;
-        while ((cut = pending.indexOf('\n')) >= 0 || (cut = pending.indexOf('\r')) >= 0)
-        {
-            const QString line = QString::fromUtf8(pending.left(cut)).trimmed();
-            pending.remove(0, cut + 1);
-            static const QRegularExpression progressRe{"^#GUI#progress\\s+(\\d+)%"};
-            const QRegularExpressionMatch m = progressRe.match(line);
-            if (m.hasMatch())
-            {
-                if (progress)
-                {
-                    progress(m.captured(1).toDouble() / 100.0);
-                }
-            }
-            else if (!line.isEmpty())
-            {
-                lastLine = line;
-            }
-        }
-    };
-
-    while (proc.state() != QProcess::NotRunning)
-    {
-        proc.waitForReadyRead(200);
-        consume(proc.readAllStandardOutput());
-    }
-    consume(proc.readAllStandardOutput());
-    consume("\n");
-
-    if (proc.exitStatus() != QProcess::NormalExit || proc.exitCode() > 1)
-    {
-        QString detail = lastLine;
-        if (output)
-        {
-            const QStringList lines = QString::fromUtf8(
-                proc.readAllStandardError() + collected).trimmed().split('\n');
-            detail = lines.isEmpty() ? QString() : lines.back().trimmed();
-        }
-        static const QRegularExpression guiPrefix{"^#GUI#\\w+\\s*"};
-        detail.remove(guiPrefix);
-        error = QObject::tr("%1 failed: %2")
-            .arg(program, detail.isEmpty() ? QString::number(proc.exitCode()) : detail);
-        return false;
-    }
-    if (output)
-    {
-        *output = collected;
-    }
-    return true;
-}
+using MkvTools::isMatroska;
+using MkvTools::runTool;
 
 EditResult editMatroska(const EditRequest &req, const Progress &progress)
 {
@@ -667,6 +575,22 @@ EditResult editMatroska(const EditRequest &req, const Progress &progress)
         return result;
     }
 
+    /* The track's own tags (e.g. SHIROIKUMA_SUBTITLES, which marks the
+     * subtitles tool's track) would be lost with the old track */
+    const QString tagsPath = tempDir.filePath("track-tags.xml");
+    bool haveTags = false;
+    const quint64 uid = MkvTools::exactUid(json, props["uid"]);
+    if (uid == 0)
+    {
+        error = QObject::tr("Cannot identify subtitle track %1 to keep its tags")
+            .arg(req.srcId);
+        return result;
+    }
+    if (!MkvTools::extractTrackTags(path, uid, tagsPath, haveTags, error))
+    {
+        return result;
+    }
+
     /* Mux: every track of the original except this one, plus the whole
      * edited stream in its place, with the same flags */
     QStringList args;
@@ -704,6 +628,10 @@ EditResult editMatroska(const EditRequest &req, const Progress &progress)
         {
             args << option << QString("0:%1").arg(props[key].toBool() ? 1 : 0);
         }
+    }
+    if (haveTags)
+    {
+        args << "--tags" << "0:" + tagsPath;
     }
     args << "--sub-charset" << "0:UTF-8" << subPath;
 
@@ -944,6 +872,14 @@ bool SubtitleEditor::save(
     if (!QFileInfo(req.path).isFile())
     {
         return refuse(tr("%1 is not a local file.").arg(req.path));
+    }
+    if (!m_requiredPath.isEmpty() &&
+        (!track->external() ||
+         QFileInfo(req.path).absoluteFilePath() != QFileInfo(m_requiredPath).absoluteFilePath()))
+    {
+        return refuse(tr("In correction mode only the working copy %1 can be "
+                         "edited. Select it as the primary subtitle.")
+            .arg(QFileInfo(m_requiredPath).fileName()));
     }
 
     m_editStart = start;

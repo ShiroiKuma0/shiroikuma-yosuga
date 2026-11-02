@@ -63,6 +63,13 @@ class SubtitleEditor : public QObject
         NOTIFY listsChanged
     )
 
+    /* Fork correction mode: when set, only this external file may be edited */
+    Q_PROPERTY(
+        QString requiredPath
+        MEMBER m_requiredPath
+        NOTIFY requiredPathChanged
+    )
+
     /* True from the save request until the reloaded file is restored */
     Q_PROPERTY(
         bool busy
@@ -135,6 +142,7 @@ public:
 signals:
     void playerChanged();
     void listsChanged();
+    void requiredPathChanged();
     void busyChanged();
     void reloadingChanged();
     void stageChanged();
@@ -212,6 +220,7 @@ private:
 
     QPointer<MpvPlayer> m_player;
     QPointer<SubtitleLists> m_lists;
+    QString m_requiredPath;
 
     /* One worker: saves to the same file must never overlap */
     QThreadPool m_pool;

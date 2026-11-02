@@ -354,6 +354,13 @@ void MpvState::setTracks(const mpv_node *node)
                     track->setExternalFilename(node->u.list->values[i].u.list->values[n].u.string);
                 }
             }
+            else if (QString(node->u.list->values[i].u.list->keys[n]) == "hearing-impaired")
+            {
+                if (node->u.list->values[i].u.list->values[n].format == MPV_FORMAT_FLAG)
+                {
+                    track->setHearingImpaired(node->u.list->values[i].u.list->values[n].u.flag != 0);
+                }
+            }
             else if (QString(node->u.list->values[i].u.list->keys[n]) == "codec")
             {
                 if (node->u.list->values[i].u.list->values[n].format == MPV_FORMAT_STRING)

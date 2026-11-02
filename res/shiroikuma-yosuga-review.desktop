@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+MimeType=video/x-matroska;application/x-subrip;
+# Dolphin sorts top-level service actions by their action key, not by the
+# shown Name. "PlayYosugaCorrect" sorts right after "PlayYosuga" (the user's
+# "Play with 白い熊 縁" action), so this entry sits directly under it.
+Actions=PlayYosugaCorrect;
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+X-KDE-Priority=TopLevel
+
+[Desktop Action PlayYosugaCorrect]
+Name=Correct subtitles with “白い熊 縁”
+Icon=memento
+Exec=shiroikuma-yosuga --review %f

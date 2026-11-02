@@ -59,7 +59,17 @@ Rectangle {
             focusPolicy: Qt.NoFocus
             icon.name: MementoSettings.interfaceSystemIcons ? "media-seek-backward" : null
             icon.source: Utils.toImageProvider("fast-rewind", MementoPalette.text)
-            onClicked: root.player.controller.subtitleSeek(-1, true)
+            onClicked: {
+                /* Fork: in correction mode these step through the review cues */
+                if (root.player.reviewSession && root.player.reviewSession.active)
+                {
+                    root.player.reviewSession.previous();
+                }
+                else
+                {
+                    root.player.controller.subtitleSeek(-1, true);
+                }
+            }
         }
 
         ToolButton {
@@ -67,7 +77,17 @@ Rectangle {
             focusPolicy: Qt.NoFocus
             icon.name: MementoSettings.interfaceSystemIcons ? "media-seek-forward" : null
             icon.source: Utils.toImageProvider("fast-forward", MementoPalette.text)
-            onClicked: root.player.controller.subtitleSeek(1, true)
+            onClicked: {
+                /* Fork: in correction mode these step through the review cues */
+                if (root.player.reviewSession && root.player.reviewSession.active)
+                {
+                    root.player.reviewSession.next();
+                }
+                else
+                {
+                    root.player.controller.subtitleSeek(1, true);
+                }
+            }
         }
 
         ToolButton {

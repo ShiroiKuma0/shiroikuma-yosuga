@@ -92,22 +92,59 @@ static bool isEnglishTrack(const MpvTrack *track)
         title.contains("english", Qt::CaseInsensitive);
 }
 
+/**
+ * @brief Fork: whether a subtitle track is text (not a bitmap format).
+ */
+static bool isTextTrack(const MpvTrack *track)
+{
+    static const QStringList bitmapCodecs{
+        "hdmv_pgs_subtitle", "dvd_subtitle", "dvb_subtitle", "xsub",
+        "dvb_teletext", "arib_caption",
+    };
+    return !bitmapCodecs.contains(track->codec(), Qt::CaseInsensitive);
+}
+
+/**
+ * @brief Fork: whether a track is for the hearing impaired (SDH), by its
+ *        flag or its title.
+ */
+static bool isSdhTrack(const MpvTrack *track)
+{
+    static const QRegularExpression sdh(
+        "\\b(SDH|CC)\\b|hearing", QRegularExpression::CaseInsensitiveOption
+    );
+    return track->hearingImpaired() || sdh.match(track->title()).hasMatch();
+}
+
 void PlayerManager::selectDefaultSecondarySubtitle()
 {
+    /* Fork: English SDH text first (it carries the most of what is heard),
+     * then the first English text track, then any English track */
     MpvState *state = m_context->player()->state();
+    const MpvTrack *best = nullptr;
+    int bestRank = 0;
     for (const MpvTrack *track : state->subtitleTracks())
     {
         if (!isEnglishTrack(track))
         {
             continue;
         }
-        /* mpv refuses to select one track twice; leave a file whose only
-         * English track is already the primary subtitle alone. */
-        if (track->id() != state->sid())
+        int rank = 1;
+        if (isTextTrack(track))
         {
-            m_context->player()->controller()->setSecondarySid(track->id());
+            rank = isSdhTrack(track) ? 3 : 2;
         }
-        return;
+        if (rank > bestRank)
+        {
+            best = track;
+            bestRank = rank;
+        }
+    }
+    /* mpv refuses to select one track twice; leave a file whose chosen
+     * English track is already the primary subtitle alone. */
+    if (best != nullptr && best->id() != state->sid())
+    {
+        m_context->player()->controller()->setSecondarySid(best->id());
     }
 }
 

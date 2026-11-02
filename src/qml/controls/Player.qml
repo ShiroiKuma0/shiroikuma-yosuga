@@ -27,6 +27,9 @@ MpvPlayer {
      * the window must not autofit and playback must not auto-start */
     readonly property bool subtitleReloading: subtitleEditor.reloading
 
+    /* Fork: correction mode (shiroikuma-yosuga --review=…) */
+    readonly property alias reviewSession: reviewSession
+
     signal auxiliarySearchRequested(string text)
 
     enum OscVisibility
@@ -903,6 +906,7 @@ MpvPlayer {
         id: subtitleEditor
         player: root
         lists: SubtitleLists
+        requiredPath: reviewSession.active ? reviewSession.workingPath : ""
 
         onFailed: function(message) {
             subtitleSaveDialog.error = message;
@@ -1169,6 +1173,287 @@ MpvPlayer {
                 if (!activeFocus)
                 {
                     subtitleEditBox.finish(false);
+                }
+            }
+        }
+    }
+
+    /* Fork: correction mode. Steps through the review cues the subtitles
+     * tool left beside the film; the working copy of its 日本語 track is the
+     * primary subtitle, so edits land there; Fix MKV writes it back. */
+    ReviewSession {
+        id: reviewSession
+        player: root
+
+        onLoadRequested: function(film) {
+            root.controller.loadFile([film]);
+        }
+        onConfirmRequested: function(message) {
+            reviewDialog.show("confirm", qsTr("The 日本語 track has changed"), message);
+        }
+        onFailed: function(message) {
+            reviewDialog.show("error", qsTr("Correction mode"), message);
+        }
+        onFixed: function(message) {
+            reviewDialog.show("info", qsTr("Fix MKV"), message);
+        }
+    }
+
+    Connections {
+        target: root
+        function onFileLoaded(w, h, path) {
+            if (reviewSession.active && !subtitleEditor.reloading)
+            {
+                reviewSession.handleFileLoaded(path);
+            }
+        }
+    }
+
+    Rectangle {
+        id: reviewPanel
+
+        visible: reviewSession.active && !root.ocrMode
+        x: 12
+        y: (menu.visible ? menu.height : 0) + 12
+        z: 1
+        width: Math.min(root.width * 0.38, 520)
+        height: reviewPanelColumn.implicitHeight + 20
+        color: Qt.rgba(0, 0, 0, 0.75)
+        border.color: "#FFFF00"
+        border.width: 2
+        radius: 6
+
+        /* Clicks on the panel stay off the player */
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+            hoverEnabled: true
+        }
+
+        Column {
+            id: reviewPanelColumn
+            x: 10
+            y: 10
+            width: parent.width - 20
+            spacing: 8
+
+            Row {
+                spacing: 12
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: (reviewSession.current + 1) + "/" + reviewSession.count
+                    color: "#FFFF00"
+                    font.pixelSize: 28
+                    font.bold: true
+                }
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("%1 of %2 checked")
+                        .arg(reviewSession.checkedCount).arg(reviewSession.count)
+                    color: "#FFFF00"
+                    font.pixelSize: 13
+                }
+            }
+
+            Text {
+                width: parent.width
+                visible: text !== ""
+                text: reviewSession.note
+                color: "white"
+                wrapMode: Text.Wrap
+                textFormat: Text.PlainText
+                font.pixelSize: 16
+            }
+
+            Row {
+                spacing: 8
+
+                Button {
+                    text: "◀"
+                    focusPolicy: Qt.NoFocus
+                    enabled: reviewSession.current > 0 && !reviewSession.busy
+                    onClicked: reviewSession.previous()
+                }
+
+                Button {
+                    text: "▶"
+                    focusPolicy: Qt.NoFocus
+                    enabled: reviewSession.current + 1 < reviewSession.count &&
+                             !reviewSession.busy
+                    onClicked: reviewSession.next()
+                }
+
+                Button {
+                    text: qsTr("Fix MKV")
+                    focusPolicy: Qt.NoFocus
+                    visible: reviewSession.allChecked
+                    enabled: !reviewSession.busy && !subtitleEditor.busy
+                    onClicked: reviewSession.fixMkv()
+                }
+            }
+        }
+    }
+
+    /* Fork: progress, questions and results of correction mode */
+    Popup {
+        id: reviewDialog
+
+        /* "progress", "error", "confirm" or "info" */
+        property string kind: "progress"
+        property string title: ""
+        property string message: ""
+
+        function show(kind, title, message) {
+            reviewDialog.kind = kind;
+            reviewDialog.title = title;
+            reviewDialog.message = message;
+            reviewDialog.open();
+        }
+
+        parent: Overlay.overlay
+        anchors.centerIn: parent
+        width: Math.min(parent ? parent.width - 32 : 520, 520)
+        modal: true
+        focus: true
+        closePolicy: Popup.NoAutoClose
+        padding: 20
+
+        onClosed: root.forceActiveFocus()
+
+        Connections {
+            target: reviewSession
+            function onBusyChanged() {
+                if (reviewSession.busy)
+                {
+                    reviewDialog.show(
+                        "progress",
+                        qsTr("Correction mode"),
+                        ""
+                    );
+                }
+                else if (reviewDialog.kind === "progress")
+                {
+                    reviewDialog.close();
+                }
+            }
+        }
+
+        background: Rectangle {
+            color: MementoPalette.window
+            border.color: "#FFFF00"
+            border.width: 2
+        }
+
+        contentItem: Item {
+            implicitWidth: reviewDialogColumn.implicitWidth
+            implicitHeight: reviewDialogColumn.implicitHeight
+            focus: true
+
+            Keys.onShortcutOverride: function(event) {
+                event.accepted = true;
+            }
+            Keys.onPressed: function(event) {
+                if ((reviewDialog.kind === "error" || reviewDialog.kind === "info") &&
+                        (event.key === Qt.Key_Return || event.key === Qt.Key_Enter ||
+                         event.key === Qt.Key_Escape))
+                {
+                    reviewDialog.close();
+                }
+                event.accepted = true;
+            }
+
+            Column {
+                id: reviewDialogColumn
+                width: parent.width
+                spacing: 12
+
+                Label {
+                    width: parent.width
+                    text: reviewDialog.title
+                    font.bold: true
+                    color: MementoPalette.windowText
+                }
+
+                Label {
+                    width: parent.width
+                    wrapMode: Text.Wrap
+                    text: reviewDialog.kind === "progress" ?
+                        reviewSession.stage : reviewDialog.message
+                    color: MementoPalette.windowText
+                }
+
+                ProgressBar {
+                    id: reviewProgress
+                    width: parent.width
+                    visible: reviewDialog.kind === "progress"
+                    from: 0
+                    to: 1
+                    value: Math.max(0, reviewSession.progress)
+                    indeterminate: reviewSession.progress < 0
+
+                    background: Rectangle {
+                        implicitHeight: 10
+                        color: MementoPalette.base
+                        border.color: MementoPalette.windowText
+                        border.width: 1
+                    }
+
+                    contentItem: Item {
+                        implicitHeight: 10
+                        clip: true
+
+                        Rectangle {
+                            id: reviewProgressFill
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            anchors.margins: 2
+                            x: reviewProgress.indeterminate ? 0 : 2
+                            width: reviewProgress.indeterminate ?
+                                parent.width * 0.25 :
+                                Math.max(0, reviewProgress.visualPosition * (parent.width - 4))
+                            color: MementoPalette.windowText
+
+                            NumberAnimation on x {
+                                running: reviewProgress.indeterminate &&
+                                         reviewDialog.visible
+                                from: -reviewProgressFill.width
+                                to: reviewProgress.width
+                                duration: 1200
+                                loops: Animation.Infinite
+                            }
+                        }
+                    }
+                }
+
+                Row {
+                    anchors.right: parent.right
+                    spacing: 8
+                    visible: reviewDialog.kind === "confirm"
+
+                    Button {
+                        text: qsTr("Re-extract")
+                        onClicked: {
+                            reviewDialog.close();
+                            reviewSession.reextract();
+                        }
+                    }
+
+                    Button {
+                        text: qsTr("Abort")
+                        onClicked: {
+                            reviewDialog.close();
+                            reviewSession.abort();
+                        }
+                    }
+                }
+
+                Button {
+                    anchors.right: parent.right
+                    visible: reviewDialog.kind === "error" || reviewDialog.kind === "info"
+                    text: qsTr("OK")
+                    onClicked: reviewDialog.close()
                 }
             }
         }

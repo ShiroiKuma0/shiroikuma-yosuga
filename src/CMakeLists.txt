@@ -214,6 +214,11 @@ if(UNIX AND NOT APPLE)
 		FILES "${PROJECT_SOURCE_DIR}/res/memento.desktop"
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
 	)
+	# Fork: Dolphin "Correct subtitles with 白い熊 縁" (correction mode)
+	install(
+		FILES "${PROJECT_SOURCE_DIR}/res/shiroikuma-yosuga-review.desktop"
+		DESTINATION ${CMAKE_INSTALL_DATADIR}/kio/servicemenus
+	)
 	install(
 		FILES "${PROJECT_SOURCE_DIR}/res/memento.svg"
 		DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps

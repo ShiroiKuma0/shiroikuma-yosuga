@@ -1,6 +1,10 @@
 add_library(
     subtitle
     subtitleentry.h
+    mkvtools.cpp
+    mkvtools.h
+    reviewsession.cpp
+    reviewsession.h
     subtitleeditor.cpp
     subtitleeditor.h
     subtitlelistmodel.cpp
@@ -18,5 +22,6 @@ target_link_libraries(
     PRIVATE context
     PRIVATE mpvplayer
     PRIVATE Qt6::Concurrent
+    PRIVATE utils
     PUBLIC Qt6::Core
 )

@@ -66,6 +66,7 @@
 #include "setting/migration.h"
 #include "setting/settings.h"
 #include "state/context.h"
+#include "subtitle/reviewsession.h"
 #include "subtitle/subtitleeditor.h"
 #include "subtitle/subtitlelistmodel.h"
 #include "subtitle/subtitlelists.h"
@@ -267,6 +268,7 @@ static void registerQmlTypes(Context &context, OcrController *ocrController)
     /* Subtitle Types */
 
     qmlRegisterType<SubtitleEditor>(MEMENTO_URI, 1, 0, "SubtitleEditor");
+    qmlRegisterType<ReviewSession>(MEMENTO_URI, 1, 0, "ReviewSession");
 
     qmlRegisterUncreatableType<SubtitleListModel>(
         MEMENTO_URI, 1, 0, "SubtitleListModel",
@@ -477,6 +479,10 @@ int main(int argc, char *argv[])
     if (showHelpMessage(argc, argv))
     {
         std::cout << "Usage: shiroikuma-yosuga [options] [url|path]\n"
+            << "       shiroikuma-yosuga --review=<film or review SRT>\n"
+            << "\n"
+            << "--review opens a film in correction mode, working through\n"
+            << "<film>.possible-ja-CORRECTIONS-review.srt beside it.\n"
             << "\n"
             << "For more information about commandline arguments, see "
                "https://mpv.io/manual/\n";
