@@ -6,6 +6,12 @@ releases are listed at <https://github.com/ripose-jp/Memento/releases>. Every en
 delta since the previous fork release; each says which upstream release it is built on.
 Release tags carry no `v`; from `2.0.2+032` on, the build counter is zero-padded to three digits.
 
+## 白い熊 縁 2.0.2+038 — 2026-11-02
+
+Built on upstream Memento `v2.0.2`.
+
+- **The package recommends `mkvtoolnix`** — editing a subtitle track embedded in a Matroska file runs `mkvextract` and `mkvmerge`; `apt` now installs them alongside the player, so the edit no longer fails with "`mkvmerge` is not installed" on a machine without them.
+
 ## 白い熊 縁 2.0.2+037 — 2026-11-02
 
 Built on upstream Memento `v2.0.2`.

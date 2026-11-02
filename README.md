@@ -17,7 +17,7 @@ Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards,
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+037`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+038`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
