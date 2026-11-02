@@ -10,14 +10,14 @@ A fork of [Memento](https://github.com/ripose-jp/Memento) (GPL-2.0) with **major
 built-in MangaOCR subtitle scanning on a frozen frame with popup lookup, a native Tuxedo OS /
 Debian `.deb` package, Qt 6.9.2 compatibility fixes the upstream app lacks, the first English
 track auto-selected as the second subtitle, a secondary subtitle that stays up as long as the
-primary one, right-click editing of subtitles saved back into the SRT or MKV, a fully stylable dictionary popup (fonts, colors, tag colors, background), one-click
+primary one, right-click editing of subtitles saved back into the SRT or MKV, a correction mode that walks through Whisper review cues and fixes the MKV in one go, a fully stylable dictionary popup (fonts, colors, tag colors, background), one-click
 copy and Jami sharing of dictionary entries, clean application exit, a quiet launch, and the 白い熊 black-yellow identity.
 
 Grammar-aware subtitle search, Yomichan-style dictionary lookup and Kanji cards, Anki card
 creation through [AnkiConnect](https://ankiweb.net/shared/info/2055492159), full mpv
 configuration support — packaged for the desktop it actually runs on.
 
-**📥 Latest release: [`2.0.2+038`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
+**📥 Latest release: [`2.0.2+043`](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases/latest)** — [all releases & downloads »](https://github.com/ShiroiKuma0/shiroikuma-yosuga/releases)
 
 </div>
 
@@ -85,6 +85,21 @@ embedded in an MKV is written back with mkvtoolnix into a new file that replaces
 every other track, attachment and chapter untouched. A centred progress dialog follows the
 rewrite, and the file reopens at the same moment with the same tracks selected, the same
 pause state and the same window — the fixed line is simply there.
+
+---
+
+## ✅ Correction mode: listen, fix, Fix MKV
+
+For films whose Japanese track was written by the
+[subtitles](https://github.com/ShiroiKuma0/shiroikuma-subtitles) tool from the dubbed audio:
+right-click the film (or its `…possible-ja-CORRECTIONS-review.srt`) in Dolphin and pick
+**Correct subtitles with “白い熊 縁”**. The film opens on the first cue to check, with a
+yellow **3/19** counter and the cue's note (`[直]` corrected by the audio, `[?]` suspect)
+beside it, English SDH above for comparison. ◀ ▶ jump cue to cue and the line pauses at its
+end; fix it with the right-click editor — the edits go to a working copy, instantly, no
+remux. Quit any time and pick up where you left off. When every cue has been heard,
+**Fix MKV** writes the corrections into the film's 日本語 track in one verified remux and
+clears the review files away. In normal play those files never steal the subtitle slot.
 
 ---
 

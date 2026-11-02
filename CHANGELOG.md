@@ -6,6 +6,23 @@ releases are listed at <https://github.com/ripose-jp/Memento/releases>. Every en
 delta since the previous fork release; each says which upstream release it is built on.
 Release tags carry no `v`; from `2.0.2+032` on, the build counter is zero-padded to three digits.
 
+## 白い熊 縁 2.0.2+043 — 2026-11-03
+
+Built on upstream Memento `v2.0.2`.
+
+- **Correction mode** — `shiroikuma-yosuga --review=<film or review SRT>` (also `--review <file>`) works through the cues the [subtitles](https://github.com/ShiroiKuma0/shiroikuma-subtitles) tool leaves beside a film in `<film>.possible-ja-CORRECTIONS-review.srt`. The other file is found by the base name; with no review SRT the film simply plays.
+- **Dolphin action “Correct subtitles with “白い熊 縁””** — installed by the package as `/usr/share/kio/servicemenus/shiroikuma-yosuga-review.desktop` for MKV and SRT files, top-level, and keyed `PlayYosugaCorrect` so it sorts directly under a “Play with 白い熊 縁” action keyed `PlayYosuga`.
+- **The working copy** — the film must hold exactly one Japanese `S_TEXT/UTF8` track tagged `SHIROIKUMA_SUBTITLES` (otherwise the mode refuses with a message and the film plays normally). It is extracted to `<film>.ja-whisper-working.srt` beside the film and selected as the primary subtitle, so every right-click correction is an instant rewrite of that file — no remux per line. In this mode the editor refuses edits to any other track. The review SRT is parsed only and never loaded into mpv, so it can never be written to.
+- **Review panel** — a yellow-edged panel at the top left shows the `n/N` counter, how many cues are checked, and the current cue's note (`[直]` / `[?]` / `候補` / `EN:` lines), with ◀ ▶ buttons; the player's subtitle-seek buttons step through the review cues too. A cue counts as checked once playback reaches it.
+- **Landing on the right line** — next/previous seek to just before the cue, but never inside an earlier primary line (lines only 80 ms apart are common): playback lands after it, or on the cue start when lines touch, so `sub-pause.lua` pauses at the end of the line being checked. The counter follows the button press, not the position, until playback reaches the cue.
+- **Script and track handling in the mode** — `sub-auto` is switched off while the mode runs, and `sub-skip`'s minimum interval is raised so it never jumps to the next Japanese line instead of the next cue; both are restored afterwards. The Second Track is English SDH where the film has one.
+- **Resume** — progress (checked cues, the SHA-256 of the track as extracted) is kept in `~/.local/share/shiroikuma-yosuga/review/<film>.json`; reopening continues at the first unchecked cue. If the film's track has changed since the working copy was taken (an edit in normal play), a dialog offers Re-extract or Abort — corrections are never merged silently.
+- **Fix MKV** — appears once every cue is checked. It closes the film and runs `subtitles fix-mkv FILM WORKING --review REVIEW --expect-sha256 HEX` (found on the `PATH` or in `~/0/bin`, with a plain message if it is missing), showing its `PROGRESS` lines in a yellow-bordered progress dialog. Success needs exit code 0 and a final `VERIFIED`; then the state file is removed and the tool deletes the review and working SRTs. Any failure shows the reason (exit codes 2–7 and the tool's `Error:` lines) and deletes nothing.
+- **Normal play keeps the film's own 日本語 track** — mpv's `sub-auto=fuzzy` loads the review and working SRTs beside a film and prefers them over the embedded track (it even reads `ja-whisper-working` as Japanese). Outside correction mode both are now dropped from the track list on every load, and if one had been picked the film's Japanese track (the one titled 日本語 first) is selected instead.
+- **Editing an embedded track keeps its tags** — the right-click editor's Matroska remux now carries the edited track's own tags over (statistics tags left to mkvmerge), so `SHIROIKUMA_SUBTITLES` survives an edit in normal play. Track UIDs above 2^63 are matched exactly.
+- **Second Track prefers English SDH** — by mpv's hearing-impaired flag or an `SDH`/`CC`/“hearing” title; then the first English text track; image tracks (PGS, DVD) only as a last resort.
+- Fix: correction mode no longer switches itself off on launch when mpv's `path` property lags behind the file-loaded event.
+
 ## 白い熊 縁 2.0.2+038 — 2026-11-02
 
 Built on upstream Memento `v2.0.2`.
