@@ -23,6 +23,10 @@ MpvPlayer {
 
     property bool ocrMode: false
 
+    /* Fork: true while the player reopens a file after a subtitle edit —
+     * the window must not autofit and playback must not auto-start */
+    readonly property bool subtitleReloading: subtitleEditor.reloading
+
     signal auxiliarySearchRequested(string text)
 
     enum OscVisibility
@@ -838,6 +842,11 @@ MpvPlayer {
         }
         onDoubleClicked: clipboard.setText(text)
 
+        /* Fork: right-click edits the subtitle inline */
+        opacity: subtitleEditBox.editing ? 0 : 1
+        enabled: !subtitleEditBox.editing
+        onRightClicked: subtitleEditBox.begin()
+
         HoverHandler {
             id: subtitleHover
 
@@ -881,6 +890,285 @@ MpvPlayer {
                         KeyTracker.modifierHeld(MementoSettings.searchModifier))
                 {
                     Qt.callLater(definitionPopup.search, subtitleText.hoverIndex);
+                }
+            }
+        }
+    }
+
+    /* Fork: inline subtitle editor. Right-click the subtitle, edit, Enter
+     * saves (Shift+Enter breaks the line), Escape or clicking elsewhere
+     * cancels. The edit is written back to the external subtitle file or
+     * muxed back into the Matroska file the track lives in. */
+    SubtitleEditor {
+        id: subtitleEditor
+        player: root
+        lists: SubtitleLists
+
+        onFailed: function(message) {
+            subtitleSaveDialog.error = message;
+            subtitleSaveDialog.open();
+        }
+    }
+
+    /* Fork: progress of a subtitle save and the reload after it */
+    Popup {
+        id: subtitleSaveDialog
+
+        property string error: ""
+
+        parent: Overlay.overlay
+        anchors.centerIn: parent
+        width: Math.min(parent ? parent.width - 32 : 460, 460)
+        modal: true
+        focus: true
+        closePolicy: Popup.NoAutoClose
+        padding: 20
+
+        onClosed: {
+            subtitleSaveDialog.error = "";
+            root.forceActiveFocus();
+        }
+
+        /* A save that ends at once (a plain subtitle file) shows no dialog */
+        Timer {
+            id: subtitleSaveDialogDelay
+            interval: 250
+            running: subtitleEditor.busy
+            onTriggered: {
+                if (subtitleEditor.busy)
+                {
+                    subtitleSaveDialog.open();
+                }
+            }
+        }
+        Connections {
+            target: subtitleEditor
+            function onBusyChanged() {
+                if (!subtitleEditor.busy && subtitleSaveDialog.error === "")
+                {
+                    subtitleSaveDialog.close();
+                }
+            }
+        }
+
+        background: Rectangle {
+            color: MementoPalette.window
+            border.color: MementoPalette.border
+            border.width: 1
+        }
+
+        contentItem: Item {
+            implicitWidth: saveDialogColumn.implicitWidth
+            implicitHeight: saveDialogColumn.implicitHeight
+            focus: true
+
+            /* Nothing reaches the player while the file is being rewritten */
+            Keys.onShortcutOverride: function(event) {
+                event.accepted = true;
+            }
+            Keys.onPressed: function(event) {
+                if (subtitleSaveDialog.error !== "" &&
+                        (event.key === Qt.Key_Return || event.key === Qt.Key_Enter ||
+                         event.key === Qt.Key_Escape))
+                {
+                    subtitleSaveDialog.close();
+                }
+                event.accepted = true;
+            }
+
+            Column {
+                id: saveDialogColumn
+                width: parent.width
+                spacing: 12
+
+                Label {
+                    width: parent.width
+                    text: subtitleSaveDialog.error !== "" ?
+                        qsTr("Subtitle not saved") : qsTr("Saving subtitle")
+                    font.bold: true
+                    color: MementoPalette.windowText
+                }
+
+                Label {
+                    width: parent.width
+                    wrapMode: Text.Wrap
+                    text: subtitleSaveDialog.error !== "" ?
+                        subtitleSaveDialog.error : subtitleEditor.stage
+                    color: MementoPalette.windowText
+                }
+
+                ProgressBar {
+                    id: subtitleSaveProgress
+                    width: parent.width
+                    visible: subtitleSaveDialog.error === ""
+                    from: 0
+                    to: 1
+                    value: Math.max(0, subtitleEditor.progress)
+                    indeterminate: subtitleEditor.progress < 0
+
+                    background: Rectangle {
+                        implicitHeight: 10
+                        color: MementoPalette.base
+                        border.color: MementoPalette.windowText
+                        border.width: 1
+                    }
+
+                    contentItem: Item {
+                        implicitHeight: 10
+                        clip: true
+
+                        Rectangle {
+                            id: subtitleSaveProgressFill
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            anchors.margins: 2
+                            x: subtitleSaveProgress.indeterminate ? 0 : 2
+                            width: subtitleSaveProgress.indeterminate ?
+                                parent.width * 0.25 :
+                                Math.max(0, subtitleSaveProgress.visualPosition * (parent.width - 4))
+                            color: MementoPalette.windowText
+
+                            NumberAnimation on x {
+                                running: subtitleSaveProgress.indeterminate &&
+                                         subtitleSaveDialog.visible
+                                from: -subtitleSaveProgressFill.width
+                                to: subtitleSaveProgress.width
+                                duration: 1200
+                                loops: Animation.Infinite
+                            }
+                        }
+                    }
+                }
+
+                Button {
+                    anchors.right: parent.right
+                    visible: subtitleSaveDialog.error !== ""
+                    text: qsTr("OK")
+                    onClicked: subtitleSaveDialog.close()
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        id: subtitleEditBox
+
+        property bool editing: false
+        property bool resumeAfter: false
+        property string originalText: ""
+        property real originalStart: 0
+        property real originalEnd: 0
+        property real originalDelay: 0
+
+        /**
+         * Opens the editor on the current primary subtitle and pauses.
+         */
+        function begin() {
+            if (root.state.subtitle.text === "" || subtitleEditor.busy)
+            {
+                return;
+            }
+            subtitleEditBox.originalText = root.state.subtitle.text;
+            subtitleEditBox.originalStart = root.state.subtitle.startTime;
+            subtitleEditBox.originalEnd = root.state.subtitle.endTime;
+            subtitleEditBox.originalDelay = root.state.subtitle.delay;
+            subtitleEditBox.resumeAfter = !root.state.pause;
+            root.controller.pause();
+
+            definitionPopup.clearResults();
+            definitionPopup.close();
+
+            subtitleEditArea.text = subtitleEditBox.originalText;
+            subtitleEditBox.editing = true;
+            subtitleEditArea.forceActiveFocus();
+            subtitleEditArea.cursorPosition = subtitleEditArea.length;
+        }
+
+        /**
+         * Closes the editor, saving the text if commit is true.
+         * @param commit true to save the edit, false to discard it.
+         */
+        function finish(commit) {
+            if (!subtitleEditBox.editing)
+            {
+                return;
+            }
+            subtitleEditBox.editing = false;
+            root.forceActiveFocus();
+            if (commit)
+            {
+                /* The editor resumes playback itself once the file has been
+                 * saved and reloaded (or the save refused) */
+                subtitleEditor.save(
+                    subtitleEditBox.originalText,
+                    subtitleEditBox.originalStart,
+                    subtitleEditBox.originalEnd,
+                    subtitleEditBox.originalDelay,
+                    subtitleEditArea.text,
+                    subtitleEditBox.resumeAfter
+                );
+            }
+            else if (subtitleEditBox.resumeAfter)
+            {
+                root.controller.play();
+            }
+        }
+
+        visible: editing
+        anchors {
+            horizontalCenter: root.horizontalCenter
+            bottom: subtitleText.bottom
+        }
+        width: Math.min(
+            root.width - 32,
+            Math.max(subtitleText.width * subtitleText.scale + 48, root.width * 0.4)
+        )
+        height: subtitleEditArea.implicitHeight
+        color: Qt.rgba(0, 0, 0, 0.75)
+        border.color: "#FFFF00"
+        border.width: 2
+        radius: 6
+
+        TextArea {
+            id: subtitleEditArea
+
+            anchors.fill: parent
+            padding: 8
+            background: null
+            wrapMode: TextEdit.Wrap
+            horizontalAlignment: TextEdit.AlignHCenter
+            selectByMouse: true
+            persistentSelection: true
+            color: MementoSettings.interfaceSubtitleColor
+            selectionColor: MementoPalette.highlight
+            font.family: subtitleText.font.family
+            font.bold: subtitleText.font.bold
+            font.italic: subtitleText.font.italic
+            font.weight: subtitleText.font.weight
+            font.pixelSize: Math.max(12, subtitleText.font.pixelSize * subtitleText.scale)
+
+            /* Every key belongs to the editor while it is open — no
+             * player shortcut fires mid-edit */
+            Keys.onShortcutOverride: function(event) {
+                event.accepted = true;
+            }
+            Keys.onPressed: function(event) {
+                if (event.key === Qt.Key_Escape)
+                {
+                    subtitleEditBox.finish(false);
+                    event.accepted = true;
+                }
+                else if ((event.key === Qt.Key_Return || event.key === Qt.Key_Enter) &&
+                         !(event.modifiers & Qt.ShiftModifier))
+                {
+                    subtitleEditBox.finish(true);
+                    event.accepted = true;
+                }
+            }
+            onActiveFocusChanged: {
+                if (!activeFocus)
+                {
+                    subtitleEditBox.finish(false);
                 }
             }
         }

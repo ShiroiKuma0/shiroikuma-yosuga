@@ -20,6 +20,8 @@
 
 #include "player/mpvcontroller.h"
 
+#include <vector>
+
 #include <cinttypes>
 #include <cstdlib>
 #include <cstring>
@@ -410,6 +412,40 @@ void MpvController::setVolume(int64_t value)
     {
         qWarning("Could not set volume to %" PRId64, value);
     }
+}
+
+QString MpvController::propertyString(const char *name) const
+{
+    char *value = ::mpv_get_property_string(handle(), name);
+    if (value == nullptr)
+    {
+        return {};
+    }
+    QString result = QString::fromUtf8(value);
+    ::mpv_free(value);
+    return result;
+}
+
+bool MpvController::setPropertyString(const char *name, const QString &value)
+{
+    const QByteArray utf8 = value.toUtf8();
+    return ::mpv_set_property_string(handle(), name, utf8.constData()) >= 0;
+}
+
+bool MpvController::command(const QStringList &args)
+{
+    QList<QByteArray> utf8;
+    for (const QString &arg : args)
+    {
+        utf8 << arg.toUtf8();
+    }
+    std::vector<const char *> argv;
+    for (const QByteArray &arg : utf8)
+    {
+        argv.push_back(arg.constData());
+    }
+    argv.push_back(nullptr);
+    return ::mpv_command(handle(), argv.data()) >= 0;
 }
 
 void MpvController::showText(const QString &text)

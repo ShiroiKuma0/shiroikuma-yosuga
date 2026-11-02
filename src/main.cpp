@@ -66,6 +66,7 @@
 #include "setting/migration.h"
 #include "setting/settings.h"
 #include "state/context.h"
+#include "subtitle/subtitleeditor.h"
 #include "subtitle/subtitlelistmodel.h"
 #include "subtitle/subtitlelists.h"
 #include "util/utils.h"
@@ -264,6 +265,8 @@ static void registerQmlTypes(Context &context, OcrController *ocrController)
     );
 
     /* Subtitle Types */
+
+    qmlRegisterType<SubtitleEditor>(MEMENTO_URI, 1, 0, "SubtitleEditor");
 
     qmlRegisterUncreatableType<SubtitleListModel>(
         MEMENTO_URI, 1, 0, "SubtitleListModel",

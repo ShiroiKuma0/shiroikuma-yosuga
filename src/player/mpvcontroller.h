@@ -301,6 +301,32 @@ public:
     Q_INVOKABLE void showText(const QString &text);
 
     /**
+     * @brief Fork: reads an mpv property or option as a string.
+     *
+     * @param name The property name.
+     * @return The value, or an empty string if it is unavailable.
+     */
+    [[nodiscard]]
+    QString propertyString(const char *name) const;
+
+    /**
+     * @brief Fork: sets an mpv property or option from a string.
+     *
+     * @param name  The property name.
+     * @param value The value.
+     * @return true on success, false otherwise.
+     */
+    bool setPropertyString(const char *name, const QString &value);
+
+    /**
+     * @brief Fork: runs an mpv command synchronously.
+     *
+     * @param args The command name followed by its arguments.
+     * @return true on success, false otherwise.
+     */
+    bool command(const QStringList &args);
+
+    /**
      * @brief Sends a keypress to the player.
      *
      * @param key The Qt key pressed.

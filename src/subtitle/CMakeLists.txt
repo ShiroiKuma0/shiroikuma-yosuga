@@ -1,6 +1,8 @@
 add_library(
     subtitle
     subtitleentry.h
+    subtitleeditor.cpp
+    subtitleeditor.h
     subtitlelistmodel.cpp
     subtitlelistmodel.h
     subtitlelists.cpp
@@ -14,5 +16,7 @@ target_include_directories(subtitle PRIVATE ${MEMENTO_INCLUDE_DIRS})
 target_link_libraries(
     subtitle
     PRIVATE context
+    PRIVATE mpvplayer
+    PRIVATE Qt6::Concurrent
     PUBLIC Qt6::Core
 )

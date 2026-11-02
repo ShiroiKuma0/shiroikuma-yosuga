@@ -187,6 +187,13 @@ ApplicationWindow {
             }
             onShutdown: Qt.quit()
             onFileLoaded: function(w, h, path) {
+                /* Fork: a reload after a subtitle edit keeps the window and
+                 * the pause state as they are */
+                if (player.subtitleReloading)
+                {
+                    return;
+                }
+
                 if (MementoSettings.behaviorAutoFit)
                 {
                     root.updateWindowSize(w, h);

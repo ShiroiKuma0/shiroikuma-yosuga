@@ -25,6 +25,7 @@ Item {
     signal clicked()
     signal doubleClicked()
     signal middleClicked()
+    signal rightClicked()
 
     /**
      * Selects text and sets selectionStart, selectionEnd, and selectedText.
@@ -374,7 +375,7 @@ Item {
                 MouseArea {
                     anchors.fill: textShape
                     hoverEnabled: true
-                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+                    acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
                     cursorShape: root.cursorShape
                     onPositionChanged: function(mouse) {
                         let x = mouse.x;
@@ -393,8 +394,17 @@ Item {
                         {
                             root.middleClicked();
                         }
+                        else if (event.button === Qt.RightButton)
+                        {
+                            root.rightClicked();
+                        }
                     }
-                    onDoubleClicked: root.doubleClicked()
+                    onDoubleClicked: function(event) {
+                        if (event.button === Qt.LeftButton)
+                        {
+                            root.doubleClicked();
+                        }
+                    }
                     onExited: root.hoverIndex = -1
                 }
             }
