@@ -68,7 +68,7 @@ Architecture: amd64
 Maintainer: 白い熊 <claude.ai@sumou.com>
 Installed-Size: ${INSTALLED_SIZE}
 Depends: ${DEPS}
-Recommends: yt-dlp, fonts-noto-cjk
+Recommends: yt-dlp, fonts-noto-cjk, mkvtoolnix
 Section: video
 Priority: optional
 Homepage: https://github.com/ShiroiKuma0/shiroikuma-yosuga
